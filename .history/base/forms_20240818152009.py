@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User  # Import User from auth models
-from .models import Inventory, Profile, DailyMetrics, MonthlyMetrics, YearlyMetrics
+from .models import Inventory, Profile, DailyMetrics, MonthlyMetrics, YearlyMetrics, Image
 
 class InventoryForm(forms.ModelForm):
     class Meta:
@@ -44,3 +44,8 @@ class YearlyMetricsForm(forms.ModelForm):
 
 
 
+
+class Image(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = '__all__'

@@ -7,8 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 import requests
 import logging
-from .models import Inventory, Profile, Image
-from .forms import InventoryForm, CustomUserUpdateForm, ProfileUpdateForm, DailyMetricsForm, MonthlyMetricsForm, YearlyMetricsForm
+from .models import Inventory, Profile
+from .forms import InventoryForm, CustomUserUpdateForm, ProfileUpdateForm, DailyMetricsForm, MonthlyMetricsForm, YearlyMetricsForm, Image
 from .models import DailyMetrics, MonthlyMetrics, YearlyMetrics
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger

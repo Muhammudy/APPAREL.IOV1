@@ -314,10 +314,10 @@ def save_user_profile(sender, instance, **kwargs):
 
 class Image(models.Model):
     image_goals_title = models.CharField(max_length=100, default="Goals")
-    image_goals = models.ImageField(default='images/goals.png', null=True, blank=True)
+    image_goals = models.ImageField(upload_to='images/', default='images/goals.png')
 
     image_inventorys_title = models.CharField(max_length=100, default="Inventory")
-    image_inventorys = models.ImageField(default='images/inventory.png', null=True, blank=True)
+    image_inventorys = models.ImageField(upload_to='images/', default='images/inventory.png')
 
     def __str__(self):
         return f"{self.image_goals_title} and {self.image_inventorys_title}"

@@ -100,7 +100,7 @@
         }
 
         .typewriter h1 {
-            font-size: 1.5rem;
+            font-size: 1.5em;
             margin-bottom: 1rem;
             font-weight: 700;
             display: inline-block;
@@ -365,11 +365,11 @@
         <!-- Cardboard Boxes Section for GIFs -->
         <div class="cardboard-boxes">
             <div class="cardboard-box">
-                <img src="{{ images.image_inventorys.url }}" alt="Inventory Image">
+                <img src="{% static 'images/inventory.png' %}" alt="Inventory">
                 <p class="description">Manage all your sneakers effectively with comprehensive inventory tools.</p>
             </div>
             <div class="cardboard-box">
-                <img src="{{ images.image_goals.url }}" alt="Goals Image">
+                <img src="{% static 'images/goals.png' %}" alt="Goals">
                 <p class="description">Set goals and track progress to maximize your sneaker investments.</p>
             </div>
         </div>

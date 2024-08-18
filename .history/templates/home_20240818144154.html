@@ -98,21 +98,30 @@
             margin: 2rem 0;
             border-radius: var(--border-radius);
         }
+        .typewriter {
+    display: flex;
+    justify-content: center; /* Centers the text horizontally */
+    align-items: center; /* Centers the text vertically */
+    text-align: center; /* Centers text within its container */
+    flex-wrap: wrap; /* Allows the text to wrap to the next line if needed */
+}
 
-        .typewriter h1 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            display: inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 0.15em solid var(--color-white);
-            width: 17ch;
-            animation: typing 3.5s steps(21, end), blink-caret 0.75s step-end infinite;
-        }
+.typewriter h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 0.15em solid var(--color-white);
+    width: 100%; /* Allows the text to take full width of its container */
+    max-width: 17ch; /* Limits the width to the specific characters, but allows wrapping */
+    animation: typing 3.5s steps(21, end), blink-caret 0.75s step-end infinite;
+}
+
+
 
         @keyframes typing {
-            from {
+            from {  
                 width: 0;
             }
             to {
@@ -365,11 +374,11 @@
         <!-- Cardboard Boxes Section for GIFs -->
         <div class="cardboard-boxes">
             <div class="cardboard-box">
-                <img src="{{ images.image_inventorys.url }}" alt="Inventory Image">
+                <img src="{% static 'images/inventory.png' %}" alt="Inventory">
                 <p class="description">Manage all your sneakers effectively with comprehensive inventory tools.</p>
             </div>
             <div class="cardboard-box">
-                <img src="{{ images.image_goals.url }}" alt="Goals Image">
+                <img src="{% static 'images/goals.png' %}" alt="Goals">
                 <p class="description">Set goals and track progress to maximize your sneaker investments.</p>
             </div>
         </div>

@@ -156,7 +156,31 @@
             vertical-align: middle;
             margin-right: 0.5rem;
         }
+        #id_usable_password_helptext{
+            display: none;
+        }
+        #id_usable_password{
+            display: none;
+        }
+
+        
+
+
+
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                if (label.textContent.includes('Password-based authentication:')) {
+                    label.parentElement.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    
+
+    
 </head>
 
 <body>

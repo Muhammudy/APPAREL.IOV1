@@ -29,6 +29,7 @@ urlpatterns = [
     *auth_patterns,
     *dashboard_patterns,
     *settings_patterns,
+     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:

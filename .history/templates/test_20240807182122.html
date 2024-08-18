@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <script>
+        function fetchMostPopularSneakers() {
+            fetch('http://localhost:4000/get-most-popular')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let resultArea = document.getElementById('results');
+                    resultArea.innerHTML = '';
+
+                    if (data.length === 0) {
+                        resultArea.innerHTML = '<li>No popular sneakers found.</li>';
+                    } else {
+                        data.forEach(item => {
+                            let shoeName = item.shoeName.replace(/"/g, "&quot;");
+                            let brand = item.brand.replace(/"/g, "&quot;");
+                            let sku = item.styleID.replace(/"/g, "&quot;");
+                            let description = item.description.replace(/"/g, "&quot;");
+                            let imageUrl = item.imageUrl.replace(/"/g, "&quot;");
+                            let releaseDate = item.releaseDate;
+                            let retailPrice = item.retailPrice;
+                            let img = item.img;
+                            
+                            let listItem = document.createElement('li');
+                            listItem.innerHTML = `
+                                <a href="#" onclick='showProductDetails("${shoeName.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${brand.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${sku.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${description.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${imageUrl}", "${releaseDate}", "${retailPrice}", "${img}")'>
+                                    <img src="${imageUrl}" alt="${shoeName}" class="result-image">
+                                    <p>${item.shoeName} - ${item.brand}</p>
+                                    <p>Release Date: ${releaseDate}</p>
+                                    <p>Retail Price: $${retailPrice}</p>
+                                </a>
+                            `;
+                            resultArea.appendChild(listItem);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function showProductDetails(shoeName, brand, sku, description, imageUrl, releaseDate, retailPrice, img) {
+            // Function to handle showing product details
+        }
+    </script>
+</head>
+<body>
+    <button onclick="fetchMostPopularSneakers()">Fetch Most Popular Sneakers</button>
+    <ul id="results"></ul>
+</body>
+</html>

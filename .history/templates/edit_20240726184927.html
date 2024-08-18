@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Inventory Item</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+    {% extends "inventory.html" %}
+    {% block main %}
+    <div class="content-wrapper">
+        <div class="header">
+            <h1 class="inventory-title">Edit Inventory Item</h1>
+        </div>
+        <form method="POST" action="{% url 'update-inventory' inventory_item.pk %}">
+            {% csrf_token %}
+            <div class="details-section product-details">
+                <h2>Product details</h2>
+                <div class="details-content">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="{{ inventory_item.name }}"><br>
+
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" value="{{ inventory_item.description }}"><br>
+
+                    <label for="sku">SKU:</label>
+                    <input type="text" id="sku" name="sku" value="{{ inventory_item.sku }}"><br>
+                </div>
+            </div>
+            <div class="details-section pricing-details">
+                <h2>Pricing details</h2>
+                <div class="details-content">
+                    <label for="price_paid">Price Paid:</label>
+                    <input type="number" id="price_paid" name="price_paid" value="{{ inventory_item.price_paid }}"><br>
+
+                    <label for="price_sold">Price Sold:</label>
+                    <input type="number" id="price_sold" name="price_sold" value="{{ inventory_item.price_sold }}"><br>
+                </div>
+            </div>
+            <div class="details-section size-condition">
+                <h2>Size & Condition</h2>
+                <div class="details-content">
+                    {% if inventory_item.size == "N/A" %}
+                    <div id="apparel-size-container">
+                        <label for="apparel_size">Apparel Size:</label>
+                        <select id="apparel_size" name="apparel_size">
+                            <option value="Small" {% if inventory_item.apparel_size == 'Small' %}selected{% endif %}>Small</option>
+                            <option value="Medium" {% if inventory_item.apparel_size == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Large" {% if inventory_item.apparel_size == 'Large' %}selected{% endif %}>Large</option>
+                            <option value="X-Large" {% if inventory_item.apparel_size == 'X-Large' %}selected{% endif %}>X-Large</option>
+                        </select><br>
+                    </div>
+                    {% else %}
+                    <div id="size-container">
+                        <label for="size">Size:</label>
+                        <input type="number" id="size" name="size" value="{{ inventory_item.size }}"><br>
+                    </div>
+                    {% endif %}
+                    <label for="condition">Condition:</label>
+                    <select id="condition" name="condition">
+                        <option value="New" {% if inventory_item.condition == 'New' %}selected{% endif %}>New</option>
+                        <option value="Used" {% if inventory_item.condition == 'Used' %}selected{% endif %}>Used</option>
+                        <option value="Lightly Used" {% if inventory_item.condition == 'Lightly Used' %}selected{% endif %}>Lightly Used</option>
+                    </select><br>
+                </div>
+            </div>
+            <div class="details-section quantity-status">
+                <h2>Quantity & Status</h2>
+                <div class="details-content">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="{{ inventory_item.quantity }}"><br>
+
+                    <label for="status">Status:</label>
+                    <select id="status-info" name="status">
+                        <option value="Available" {% if inventory_item.status == 'Available' %}selected{% endif %}>Available</option>
+                        <option value="Sold" {% if inventory_item.status == 'Sold' %}selected{% endif %}>Sold</option>
+                    </select><br>
+                </div>
+            </div>
+            <button type="submit" name="update"> <span class="material-symbols-outlined">
+                update
+                </span></button>
+            <button type="submit" name="delete"> <span class="material-symbols-outlined">
+                delete
+                </span></button>
+        </form>
+    </div>
+    {% endblock %}
+</body>
+</html>

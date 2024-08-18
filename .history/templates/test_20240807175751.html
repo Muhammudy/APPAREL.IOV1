@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upcoming Releases</title>
+</head>
+<body>
+    <h1>Test Upcoming Releases</h1>
+    <form id="upcoming-releases-form">
+        <label for="daysAhead">Days Ahead:</label>
+        <input type="number" id="daysAhead" name="daysAhead" min="1" value="30">
+        <button type="submit">Fetch Upcoming Releases</button>
+    </form>
+    <div id="results"></div>
+    <script>
+        function fetchUpcomingReleases() {
+    fetch('http://localhost:4000/get-upcoming-releases')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            let resultArea = document.getElementById('results');
+            resultArea.innerHTML = '';
+
+            if (data.length === 0) {
+                resultArea.innerHTML = '<li>No upcoming releases found.</li>';
+            } else {
+                data.forEach(item => {
+                    let listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <a href="#">
+                            <img src="${item.imageUrl}" alt="${item.shoeName}" class="result-image">
+                            ${item.shoeName} - ${item.brand} (Release Date: ${item.releaseDate})
+                        </a>
+                    `;
+                    resultArea.appendChild(listItem);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+    </script>
+</body>
+</html>

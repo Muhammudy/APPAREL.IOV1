@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <style>
+        aside .sidebar a.inventory {
+            background: var(--color-light) !important;
+            color: var(--color-primary) !important;
+            margin-left: 0 !important;
+        }
+
+        aside .sidebar a.inventory::before {
+            content: '' !important;
+            width: 6px !important;
+            height: 100% !important;
+            background: var(--color-primary) !important;
+        }
+
+        aside .sidebar a.inventory span {
+            color: var(--color-primary) !important;
+            margin-left: calc(1rem - 3px) !important;
+        }
+
+        aside .sidebar a:hover span {
+            margin-left: 1.5rem !important;
+        }
+
+        aside .sidebar a.dashboard {
+            background: none !important;
+            color: var(--color-info-dark) !important;
+            margin-left: 0 !important;
+        }
+
+        aside .sidebar a.dashboard::before {
+            content: '' !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: none !important;
+        }
+
+        aside .sidebar a.dashboard span {
+            color: var(--color-info-dark) !important;
+            margin-left: calc(1rem - 3px);
+        }
+
+        aside .sidebar a.dashboard:hover,
+        aside .sidebar a.dashboard:hover * {
+            color: var(--color-primary) !important;
+        }
+
+        .top {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .inventory-title {
+            margin: 0;
+        }
+
+        .inventory {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        hr {
+            border: 1px solid black;
+            width: 100%;
+            margin: 0;
+        }
+
+        .top-inventory {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: #1c1c1e;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+
+        .details-section {
+            display: flex;
+            flex-direction: column;
+            background-color: #2c2c2e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .details-section h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .details-section .details-content {
+            display: none;
+            flex-direction: column;
+        }
+
+        .details-section p {
+            font-size: 14px;
+            color: #a1a1a1;
+        }
+
+        .details-section.show .details-content {
+            display: flex;
+        }
+
+        .activity-section {
+            display: flex;
+            flex-direction: column;
+            background-color: #2c2c2e;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .activity-section p {
+            font-size: 14px;
+            color: #a1a1a1;
+            margin-bottom: 5px;
+        }
+
+        .activity-section .activity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .activity-section .activity-item span {
+            font-size: 14px;
+            color: #a1a1a1;
+        }
+
+        .activity-section .activity-item span.status {
+            font-size: 12px;
+            color: #ffffff;
+            background-color: #3a3a3c;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .activity-section .activity-item span.status.sold {
+            background-color: #f53b57;
+        }
+
+        .activity-section .activity-item span.status.listed {
+            background-color: #0a84ff;
+        }
+
+        .activity-section .activity-item span.status.created {
+            background-color: #30d158;
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.details-section h2').forEach(section => {
+                section.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('show');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    {% extends "inventory.html" %}
+    {% block main %}
+    <div class="content-wrapper">
+        <div class="header">
+            <h1 class="inventory-title">Edit Inventory Item</h1>
+        </div>
+        <form method="POST" action="{% url 'update-inventory' inventory_item.pk %}">
+            {% csrf_token %}
+            <div class="details-section product-details">
+                <h2>Product details</h2>
+                <div class="details-content">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="{{ inventory_item.name }}"><br>
+
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" value="{{ inventory_item.description }}"><br>
+
+                    <label for="sku">SKU:</label>
+                    <input type="text" id="sku" name="sku" value="{{ inventory_item.sku }}"><br>
+                </div>
+            </div>
+            <div class="details-section pricing-details">
+                <h2>Pricing details</h2>
+                <div class="details-content">
+                    <label for="price_paid">Price Paid:</label>
+                    <input type="number" id="price_paid" name="price_paid" value="{{ inventory_item.price_paid }}"><br>
+
+                    <label for="price_sold">Price Sold:</label>
+                    <input type="number" id="price_sold" name="price_sold" value="{{ inventory_item.price_sold }}"><br>
+                </div>
+            </div>
+            <div class="details-section size-condition">
+                <h2>Size & Condition</h2>
+                <div class="details-content">
+                    {% if inventory_item.size == "N/A" %}
+                    <div id="apparel-size-container">
+                        <label for="apparel_size">Apparel Size:</label>
+                        <select id="apparel_size" name="apparel_size">
+                            <option value="Small" {% if inventory_item.apparel_size == 'Small' %}selected{% endif %}>Small</option>
+                            <option value="Medium" {% if inventory_item.apparel_size == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Large" {% if inventory_item.apparel_size == 'Large' %}selected{% endif %}>Large</option>
+                            <option value="X-Large" {% if inventory_item.apparel_size == 'X-Large' %}selected{% endif %}>X-Large</option>
+                        </select><br>
+                    </div>
+                    {% else %}
+                    <div id="size-container">
+                        <label for="size">Size:</label>
+                        <input type="number" id="size" name="size" value="{{ inventory_item.size }}"><br>
+                    </div>
+                    {% endif %}
+                    <label for="condition">Condition:</label>
+                    <select id="condition" name="condition">
+                        <option value="New" {% if inventory_item.condition == 'New' %}selected{% endif %}>New</option>
+                        <option value="Used" {% if inventory_item.condition == 'Used' %}selected{% endif %}>Used</option>
+                        <option value="Lightly Used" {% if inventory_item.condition == 'Lightly Used' %}selected{% endif %}>Lightly Used</option>
+                    </select><br>
+                </div>
+            </div>
+            <div class="details-section quantity-category">
+                <h2>Quantity & Category</h2>
+                <div class="details-content">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="{{ inventory_item.quantity }}"><br>
+
+                    <label for="category">Category:</label>
+                    <select id="category" name="category">
+                        <option value="Sneakers" {% if inventory_item.category == 'Sneakers' %}selected{% endif %}>Sneakers</option>
+                        <option value="Streetwear" {% if inventory_item.category == 'Streetwear' %}selected{% endif %}>Streetwear</option>
+                    </select><br>
+                </div>
+            </div>
+            <button type="submit"></button>
+        </form>
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="profile picture" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

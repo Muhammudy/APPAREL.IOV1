@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+    <style>
+        :root {
+            --color-primary: #7380ec;
+            --color-success: #22C55E;
+            --color-warning: #F59E0B;
+            --color-background: #F3F4F6;
+            --color-white: #FFFFFF;
+            --color-dark: #111827;
+            --color-light: #E5E7EB;
+            --border-radius: 0.75rem;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.2rem;
+            background: var(--color-background);
+            color: var(--color-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem;
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .form-row {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .submit-button {
+            font-family: 'DM Sans', sans-serif;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: var(--color-primary-shade);
+        }
+
+        .password-hints {
+            text-align: left;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            color: var(--color-dark);
+        }
+
+        .password-hints span {
+            display: block;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            background: var(--color-light);
+        }
+
+        .password-hints span.valid {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .password-hints span.invalid {
+            background: var(--color-warning);
+            color: var(--color-white);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-row">
+                {{ form.as_p }}
+            </div>
+            <div class="form-row">
+                <input type="submit" value="Register" class="submit-button">
+            </div>
+        </form>
+        <div class="password-hints">
+            <span id="hint-length" class="invalid">Your password must contain at least 8 characters.</span>
+            <span id="hint-similarity" class="invalid">Your password can’t be too similar to your other personal information.</span>
+            <span id="hint-common" class="invalid">Your password can’t be a commonly used password.</span>
+            <span id="hint-numeric" class="invalid">Your password can’t be entirely numeric.</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.querySelector('input[name="password1"]');
+            const hintLength = document.getElementById('hint-length');
+            const hintSimilarity = document.getElementById('hint-similarity');
+            const hintCommon = document.getElementById('hint-common');
+            const hintNumeric = document.getElementById('hint-numeric');
+
+            passwordInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+
+                // Check length
+                if (password.length >= 8) {
+                    hintLength.classList.remove('invalid');
+                    hintLength.classList.add('valid');
+                } else {
+                    hintLength.classList.remove('valid');
+                    hintLength.classList.add('invalid');
+                }
+
+                // Check if not entirely numeric
+                if (!/^\d+$/.test(password)) {
+                    hintNumeric.classList.remove('invalid');
+                    hintNumeric.classList.add('valid');
+                } else {
+                    hintNumeric.classList.remove('valid');
+                    hintNumeric.classList.add('invalid');
+                }
+
+                // Placeholder checks for similarity and common password
+                // Adjust these with server-side validation or more complex checks as needed
+
+                // Example common password check
+                const commonPasswords = ['password', '123456', '123456789', 'qwerty', '111111'];
+                if (!commonPasswords.includes(password.toLowerCase())) {
+                    hintCommon.classList.remove('invalid');
+                    hintCommon.classList.add('valid');
+                } else {
+                    hintCommon.classList.remove('valid');
+                    hintCommon.classList.add('invalid');
+                }
+
+                // Example similarity check (basic example using a username variable)
+                const username = '{{ form.username.value|escapejs }}';
+                if (!password.toLowerCase().includes(username.toLowerCase())) {
+                    hintSimilarity.classList.remove('invalid');
+                    hintSimilarity.classList.add('valid');
+                } else {
+                    hintSimilarity.classList.remove('valid');
+                    hintSimilarity.classList.add('invalid');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

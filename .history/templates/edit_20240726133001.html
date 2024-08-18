@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Inventory Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-section input, .form-section select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-section button {
+            background: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-section button:hover {
+            background: #0056b3;
+        }
+        .form-section details summary {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .form-section details[open] summary {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Inventory Item</h1>
+
+        <form method="POST" action="{% url 'update-inventory' inventory_item.pk %}">
+            {% csrf_token %}
+            <details class="form-section">
+                <summary>Product Details</summary>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ inventory_item.name }}">
+
+                <label for="sku">SKU:</label>
+                <input type="text" id="sku" name="sku" value="{{ inventory_item.sku }}">
+
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" value="{{ inventory_item.description }}">
+
+                <label for="brand">Brand:</label>
+                <input type="text" id="brand" name="brand" value="{{ inventory_item.brand }}">
+
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="New" {% if inventory_item.status == 'New' %}selected{% endif %}>New</option>
+                    <option value="Used" {% if inventory_item.status == 'Used' %}selected{% endif %}>Used</option>
+                    <option value="Sold" {% if inventory_item.status == 'Sold' %}selected{% endif %}>Sold</option>
+                </select>
+            </details>
+
+            <details class="form-section">
+                <summary>Sizing Details</summary>
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="Sneakers" {% if inventory_item.category == 'Sneakers' %}selected{% endif %}>Sneakers</option>
+                    <option value="Streetwear" {% if inventory_item.category == 'Streetwear' %}selected{% endif %}>Streetwear</option>
+                </select>
+
+                <label for="system">System:</label>
+                <input type="text" id="system" name="system" value="{{ inventory_item.system }}">
+
+                <label for="size">Size:</label>
+                <input type="number" id="size" name="size" value="{{ inventory_item.size }}">
+            </details>
+
+            <details class="form-section">
+                <summary>Purchase Details</summary>
+                <label for="currency">Currency:</label>
+                <input type="text" id="currency" name="currency" value="{{ inventory_item.currency }}">
+
+                <label for="price_paid">Purchase Price:</label>
+                <input type="number" id="price_paid" name="price_paid" value="{{ inventory_item.price_paid }}">
+
+                <label for="price_sold">Price Sold:</label>
+                <input type="number" id="price_sold" name="price_sold" value="{{ inventory_item.price_sold }}">
+
+                <label for="shipping_price">Shipping Price:</label>
+                <input type="number" id="shipping_price" name="shipping_price" value="{{ inventory_item.shipping_price }}">
+
+                <label for="tax">Tax:</label>
+                <input type="number" id="tax" name="tax" value="{{ inventory_item.tax }}">
+
+                <label for="date_of_purchase">Date of Purchase:</label>
+                <input type="date" id="date_of_purchase" name="date_of_purchase" value="{{ inventory_item.date_of_purchase|date:'Y-m-d' }}">
+            </details>
+
+            <div class="form-section">
+                <button type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

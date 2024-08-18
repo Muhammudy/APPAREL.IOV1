@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+        :root {
+            --color-primary: #7380ec;
+            --color--primary--shade: #c5caf3; 
+            --color-logos: #ff7782;
+            --color-success: #41f1b6;
+            --color-warning: #ffbb55;
+            --color-white: #fff;
+            --color-info-dark: #7d8da1;
+            --color-info-light: #dce1eb;
+            --color-dark: #363949;
+            --color-light: rgba(132, 139, 200, 0.18);
+            --color-primary-variant: #111e88;
+            --color-dark-variant: #677483;
+            --color-background: #f6f6f9;
+            --card-border-radius: 2rem;
+            --border-radius-1: 0.4rem;
+            --border-radius-2: 0.8rem;
+            --border-radius-3: 1.2rem;
+            --card-padding: 1.8rem;
+            --padding-1: 1.2rem;
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        .dark-theme-variables {
+            --color-background: #181a1e;
+            --color-white: #202528;
+            --color-dark: #edeffd;
+            --color-dark-variant: #a3bdcc;
+            --color-light: rgba(0, 0, 0, 0.4);
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        aside .sidebar a.settings {
+            background: var(--color-light) !important;
+            color: var(--color-primary) !important;
+            margin-left: 0 !important;
+        }
+
+        aside .sidebar a.settings::before {
+            content: '' !important;
+            width: 6px !important;
+            height: 100% !important;
+            background: var(--color-primary) !important;
+        }
+
+        aside .sidebar a.settings span {
+            color: var(--color-primary) !important;
+            margin-left: calc(1rem - 3px) !important;
+        }
+
+        aside .sidebar a:hover span {
+            margin-left: 1.5rem !important;
+        }
+
+        aside .sidebar a.dashboard {
+            background: none !important;
+            color: var(--color-info-dark) !important;
+            margin-left: 0 !important;
+        }
+
+        aside .sidebar a.dashboard::before {
+            content: '' !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: none !important;
+        }
+
+        aside .sidebar a.dashboard span {
+            color: var(--color-info-dark) !important;
+            margin-left: calc(1rem - 3px);
+        }
+
+        aside .sidebar a.dashboard:hover,
+        aside .sidebar a.dashboard:hover * {
+            color: var(--color-primary) !important;
+        }
+
+        .top {
+            display: flex;
+            flex-direction: column;
+            background: rgb(255, 255, 255);
+            margin-top: 2rem;
+        }
+
+        .container-main {
+            background-color: transparent;
+        }
+
+        .tops {
+            box-shadow: var(--box-shadow);
+            background-color: #ffffff;
+            border-radius: var(--card-border-radius);
+            transition: all 300ms ease;
+        }
+
+        .tops:hover {
+            box-shadow: none;
+        }
+
+        .header {
+            margin-top: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header .settings-title {
+            font-size: 3rem;
+            margin-left: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-title {
+            margin: 0;
+            padding-right: 50rem;
+        }
+
+        .settings {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+        .form-row {
+    display: flex; /* Aligns items in a flexible container */
+    flex-direction: column; /* Stacks the label and input vertically */
+    margin-bottom: 1rem; /* Adds margin below */
+    width: 95%;
+    margin-left: auto; /* Centers the form horizontally */
+    margin-right: auto; /* Centers the form horizontally */
+}
+
+        /* Label styling */
+        .form-row label {
+            padding: 1rem;
+            margin-bottom: 0.5rem; /* Adds margin below the label */
+            font-size: 1.2rem; /* Sets font size */
+            font-weight: 600; /* Makes the font bold */
+            color: var(--color-dark); /* Sets the text color */
+            text-align: center;
+        }
+        #id_profile_pic {
+    text-align: center;
+}
+
+        /* Input field styling */
+        .form-row input[type="text"],
+        .form-row input[type="number"],
+        .form-row input[type="tel"],
+        .form-row select {
+            padding: 0.8rem; /* Adds padding inside the input */
+            border-radius: var(--border-radius-1); /* Rounds the corners */
+            border: 2px solid var(--color-info-dark); /* Adds a border */
+            font-size: 1rem; /* Sets font size */
+            color: var(--color-dark); /* Sets the text color */
+            background: var(--color-white); /* Sets the background color */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Adds transition for focus state */
+            text-align: center;
+        }
+
+        /* Focus state for input fields */
+        .form-row input[type="text"]:focus,
+        .form-row input[type="number"]:focus,
+        .form-row input[type="tel"]:focus,
+        .form-row select:focus {
+            border-color: var(--color-primary); /* Changes border color on focus */
+            box-shadow: 0 0 5px rgba(115, 128, 236, 0.5); /* Adds a subtle shadow on focus */
+        }
+
+        /* Placeholder text styling */
+        .form-row input[type="text"]::placeholder,
+        .form-row input[type="number"]::placeholder,
+        .form-row input[type="tel"]::placeholder {
+            color: var(--color-info-dark); /* Sets placeholder text color */
+            opacity: 1; /* Ensures placeholder text is fully opaque */
+        }
+
+        .button-container {
+            display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+        padding-bottom: 1rem;
+        padding-right: 2rem;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: var(--card-border-radius);
+            cursor: pointer;
+            color: rgb(0, 0, 0);
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover {
+            color: var(--color-primary);
+        }
+        #id_profile_pic {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#id_profile_pic img {
+    margin-top: 1rem;
+    max-width: 500px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    border-radius: 75%; /* Optional: makes the image a circle if it's square */
+    border: 3px solid var(--color-primary); /* Optional: adds a border for better styling */
+    box-shadow: 0 0 5px rgba(115, 128, 236, 0.5); /* Adds a subtle shadow on focus */
+}
+
+
+    </style>
+        <script>
+            function updateFileName() {
+                var input = document.getElementById('file_input');
+                var fileName = document.getElementById('file_name');
+                if (input.files && input.files[0]) {
+                    fileName.textContent = input.files[0].name;
+                } else {
+                    fileName.textContent = 'No file chosen';
+                }
+            }
+        </script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+    {% extends "dashboard.html" %}
+    {% block main %}
+    <div class>
+        <div class="header">
+            <h1 class="settings-title">Settings</h1>
+            <a href="#" id="button" class="inventory"></a>
+        </div>
+        <div class="container-main">
+            <div class="tops">
+                <hr>
+                <div class="settings-class">
+                    <div class="data-settings">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <label for="id_username">Username:</label>
+                                <input type="text" id="id_username" name="username" value="{{ user_form.username.value }}">
+                            </div>
+                            <div class="form-row">
+                                <label for="id_email">Email:</label>
+                                <input type="text" id="id_email" name="email" value="{{ user_form.email.value }}">
+                            </div>
+
+                            <div class="form-row">
+                                <label for="id_goals">Goals:</label>
+                                <label for="id_goals">Sales Goal:</label>
+                                <label for="id_goals">Inventory Goal:</label>
+                                <label for="id_goals">Profit Goal:</label>
+
+                               
+                            </div>
+
+                            <div class="form-row">
+                                <label for="id_phone_number">Phone Number:</label>
+                                <input type="tel" id="id_phone_number" name="phone_number" value="{{ profile_form.phone_number.value }}" pattern="\d{10}" title="Please enter a valid 10-digit phone number">
+
+                            </div>
+                            <div class="form-row" id="profile-pic-container">
+                                <label for="id_profile_pic">Profile Picture:</label>
+                                <div id="id_profile_pic">
+                                    <input type="file" name="profile_pic">
+                                    {% if profile_form.profile_pic.value %}
+                                        <img src="{{ profile_form.profile_pic.value.url }}" alt="Profile Picture">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="button-container">
+                                <button type="submit" name="update">
+                                    <span class="material-symbols-outlined">check</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="{{ request.user.profile.profile_pic.url }}" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

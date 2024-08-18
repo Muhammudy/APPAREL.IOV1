@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marketplace Search</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function fetchSneakerData() {
+            const info = document.getElementById('info').value;
+            const category = document.getElementById('category').value;
+
+            if (info.length > 2) {  // Only fetch data if input length is greater than 2
+                fetch('http://localhost:4000/get-sneaker-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ info, category })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let resultArea = document.getElementById('results');
+                    resultArea.innerHTML = '';
+
+                    if (data.length === 0) {
+                        resultArea.innerHTML = '<li>No results found</li>';
+                    } else {
+                        data.forEach(item => {
+                            let shoeName = item.shoeName.replace(/"/g, "&quot;");
+                            let brand = item.brand.replace(/"/g, "&quot;");
+                            let sku = item.styleID.replace(/"/g, "&quot;");
+                            let description = item.description.replace(/"/g, "&quot;");
+                            let listItem = document.createElement('li');
+                            listItem.innerHTML = `<a href="#" onclick="openModal('${shoeName}', '${brand}', '${sku}', '${category}')">${item.shoeName} - ${item.brand}</a>`;
+                            resultArea.appendChild(listItem);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function openModal(shoeName, brand, sku, category, description) {
+            document.getElementById('shoe-name').value = shoeName;
+            document.getElementById('shoe-brand').value = brand;
+            document.getElementById('sku-info').value = sku;
+            document.getElementById('description').value = description;
+            document.getElementById('category-info').value = category;
+
+            let sizeInput = document.getElementById('size-info');
+            let sizeOutput = document.getElementById('size-output');
+
+            if (sku.includes('GS')) {
+                sizeInput.min = 3.5;
+                sizeInput.max = 7;
+                sizeInput.step = 0.5;
+                sizeInput.value = 3.5;
+                sizeOutput.value = "3.5Y";
+            } else {
+                sizeInput.min = 1;
+                sizeInput.max = 15;
+                sizeInput.step = 0.5;
+                sizeInput.value = 8;
+                sizeOutput.value = "8";
+            }
+
+            sizeInput.oninput = function() {
+                sizeOutput.value = sku.includes('GS') ? `${this.value}Y` : this.value;
+            };
+
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Search Marketplace</h1>
+    <form onsubmit="event.preventDefault(); fetchSneakerData();">
+        <label for="info">Enter Additional Information:</label>
+        <input type="text" id="info" oninput="fetchSneakerData()" placeholder="Enter keyword">
+        <h2></h2>
+        <ul id="results"></ul>
+
+        <label for="category">Select Category:</label>
+        <select id="category" onchange="fetchSneakerData()">
+            <option value="sneakers">Sneakers</option>
+            <option value="streetwear">Streetwear</option>
+        </select>
+        
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Inventory Items</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>SKU</th>
+                <th>Condition</th>
+                <th>Size</th>
+                <th>Price Paid</th>
+                <th>Price Sold</th>
+                <th>Quantity</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory_items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.sku }}</td>
+                    <td>{{ item.condition }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>{{ item.price_paid }}</td>
+                    <td>{{ item.price_sold }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>
+                        <a href="{% url 'update-inventory' item.id %}">Edit</a> |
+                        <a href="{% url 'delete-inventory' item.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Product Details</h2>
+            <form method="POST" action="{% url 'inventory' %}">
+                {% csrf_token %}
+                <label for="shoe-name">Shoe Name:</label>
+                <input type="text" id="shoe-name" name="name"><br>
+
+                <label for="shoe-brand">Brand:</label>
+                <input type="text" id="shoe-brand" name="description"><br>
+
+                <label for="sku-info">SKU:</label>
+                <input type="text" id="sku-info" name="sku"><br>
+                
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description"><br>
+
+                <label for="condition-info">Condition:</label>
+                <select id="condition-info" name="condition">
+                    <option value="New">New</option>
+                    <option value="Used">Used</option>
+                    <option value="Lightly Used">Lightly Used</option>
+                </select><br>
+
+                <label for="size-info">Size:</label>
+                <input type="range" id="size-info" name="size" min="1" max="15" step="0.5" oninput="this.nextElementSibling.value = this.value">
+                <output id="size-output">8</output><br>
+
+                <label for="price-paid-info">Price Paid:</label>
+                <input type="range" id="price-paid-info" name="price_paid" min="0" max="1000" step="10" oninput="this.nextElementSibling.value = this.value">
+                <output>0</output><br>
+
+                <label for="price-sold-info">Price Sold:</label>
+                <input type="range" id="price-sold-info" name="price_sold" min="0" max="1000" step="10" oninput="this.nextElementSibling.value = this.value">
+                <output>0</output><br>
+
+                <label for="quantity-info">Quantity:</label>
+                <input type="range" id="quantity-info" name="quantity" min="1" max="100" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>1</output><br>
+
+                <label for="category-info">Category:</label>
+                <select id="category-info" name="category">
+                    <option value="Sneakers">Sneakers</option>
+                    <option value="Streetwear">Streetwear</option>
+                </select><br>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+
+        :root {
+            --color-primary: #7380ec;
+            --color-primary-shade: #c5caf3; 
+            --color-logos: #ff7782;
+            --color-success: #41f1b6;
+            --color-warning: #ffbb55;
+            --color-white: #fff;
+            --color-info-dark: #7d8da1;
+            --color-info-light: #dce1eb;
+            --color-dark: #363949;
+            --color-light: rgba(132, 139, 200, 0.18);
+            --color-primary-variant: #111e88;
+            --color-dark-variant: #677483;
+            --color-background: #f6f6f9;
+
+            --card-border-radius: 2rem;
+            --border-radius-1: 0.4rem;
+            --border-radius-2: 0.8rem;
+            --border-radius-3: 1.2rem;
+
+            --card-padding: 1.8rem;
+            --padding-1: 1.2rem;
+
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        .dark-theme-variables {
+            --color-background: #181a1e;
+            --color-white: #202528;
+            --color-dark: #edeffd;
+            --color-dark-variant: #a3bdcc;
+            --color-light: rgba(0, 0, 0, 0.4);
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-dark);
+            font-family: Arial, sans-serif;
+        }
+
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: -1.0rem;
+        }
+
+        .inventory-title {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: var(--card-border-radius);
+        }
+        .icons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .icons button {
+            flex-grow: 0.01;
+            margin: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--card-border-radius) ; /* Change this value to adjust the border radius */
+        }
+
+
+
+
+        form .icons{
+            margin-bottom: 1rem;
+        }
+        .image-container {
+            height: 100%;
+            width: 100%;
+            object-fit: cover; /* Ensures the image covers the container without distortion */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+        .details-section {
+            background-color: var(--color-primary-shade);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--card-border-radius);
+        }
+
+        .details-section h2 {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+
+        .image-container img{
+            height: 100%;
+            width: 100%;
+        }
+
+
+
+
+        .details-section h2:hover{
+            color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        .details-content {
+            display: none;
+            text-align: center;
+        }
+
+        .details-section.show .details-content {
+            display: block;
+        }
+
+        .form-row {
+            margin-bottom: 1rem;
+        }
+
+        .form-row label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-row input, .form-row select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--color-info-dark);
+            border-radius: var(--border-radius-1);
+        }
+
+        .form-row input:focus, .form-row select:focus {
+            border-color: var(--color-primary);
+        }
+
+        .button-container {
+            text-align: right;
+        }
+
+        .button-container button {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius-1);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: var(--color-primary-variant);
+        }
+
+        .data-sneakers table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .data-sneakers th, .data-sneakers td {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .data-sneakers th {
+            background-color: var(--color-primary-shade);
+        }
+
+        .data-sneakers tbody tr:nth-child(odd) {
+            background-color: var(--color-light);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--card-border-radius);
+            width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-content .close:hover {
+            color: var(--color-primary);
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.details-section h2').forEach(section => {
+                section.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('show');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    {% extends "inventory.html" %}
+    {% block main %}
+    <div class="content-wrapper">
+        <div class="header">
+            <h1 class="inventory-title">Edit Inventory Item</h1>
+        </div>
+        <form method="POST" action="{% url 'update-inventory' inventory_item.pk %}">
+            {% csrf_token %}
+            <div class="icons">
+                <button type="submit" name="back-btn">
+                    <span class="material-symbols-outlined">
+                        arrow_back
+                        </span>
+                </button>
+
+            </div>
+            <div class="details-section product-details">
+                <h2>Product details</h2>
+                <div class="details-content">
+                    <div class="image-container">
+                        {% if inventory_item.image == 'images/default_image.jpg'%}
+                            <img id="product-image" src="{{ inventory_item.imageUrl }}" alt="Product Image">
+                        {% else %}
+                            <img id="product-image" src="{{ inventory_item.image.url }}" alt="Default Product Image">
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" value="{{ inventory_item.name }}">
+                    </div>
+                    <div class="form-row">
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" name="description" value="{{ inventory_item.description }}">
+                    </div>
+                    <div class="form-row">
+                        <label for="sku">SKU:</label>
+                        <input type="text" id="sku" name="sku" value="{{ inventory_item.sku }}">
+                    </div>
+                </div>
+            </div>
+            <div class="details-section pricing-details">
+                <h2>Pricing details</h2>
+                <div class="details-content">
+                    <div class="form-row">
+                        <label for="price_paid">Price Paid:</label>
+                        <input type="number" id="price_paid" name="price_paid" value="{{ inventory_item.price_paid }}">
+                    </div>
+                    <div class="form-row">
+                        <label for="price_sold">Price Sold:</label>
+                        <input type="number" id="price_sold" name="price_sold" value="{{ inventory_item.price_sold }}">
+                    </div>
+                </div>
+            </div>
+            <div class="details-section size-condition">
+                <h2>Size & Condition</h2>
+                <div class="details-content">
+                    {% if inventory_item.size == "N/A" %}
+                    <div id="apparel-size-container" class="form-row">
+                        <label for="apparel_size">Apparel Size:</label>
+                        <select id="apparel_size" name="apparel_size">
+                            <option value="Small" {% if inventory_item.apparel_size == 'Small' %}selected{% endif %}>Small</option>
+                            <option value="Medium" {% if inventory_item.apparel_size == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Large" {% if inventory_item.apparel_size == 'Large' %}selected{% endif %}>Large</option>
+                            <option value="X-Large" {% if inventory_item.apparel_size == 'X-Large' %}selected{% endif %}>X-Large</option>
+                        </select>
+                    </div>
+                    {% else %}
+                    <div class="form-row" id="size-container" style="display: flex;">
+                        <label for="size-info" class="size-label">Size:</label>
+                        <input type="range" id="size-infos" name="size" min="1" max="15" step="0.5" oninput="document.getElementById('size-size-outputs').value = this.value">
+                        <output id="size-size-outputs">8</output>
+                    </div>
+                    {% endif %}
+                    <div class="form-row">
+                        <label for="condition">Condition:</label>
+                        <select id="condition" name="condition">
+                            <option value="New" {% if inventory_item.condition == 'New' %}selected{% endif %}>New</option>
+                            <option value="Used" {% if inventory_item.condition == 'Used' %}selected{% endif %}>Used</option>
+                            <option value="Lightly Used" {% if inventory_item.condition == 'Lightly Used' %}selected{% endif %}>Lightly Used</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="details-section quantity-status">
+                <h2>Quantity & Status</h2>
+                <div class="details-content">
+                    <div class="form-row">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity" value="{{ inventory_item.quantity }}">
+                    </div>
+                    <div class="form-row">
+                        <label for="status">Status:</label>
+                        <select id="status-info" name="status">
+                            <option value="Available">Available</option>
+                            <option value="Sold" {% if inventory_item.status == 'Sold' %}selected{% endif %}>Sold</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="icons">
+                <button type="submit" name="delete">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+                <button type="submit" name="update">
+                    <span class="material-symbols-outlined">check</span>
+                </button>
+            </div>
+        </form>
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="profile picture" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

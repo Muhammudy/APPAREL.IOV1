@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const button = document.getElementById('button');
+            const modal = document.getElementById('modal');
+            const closeModalButton = document.querySelector('.close');
+
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                modal.style.display = 'flex';
+            });
+
+            closeModalButton.addEventListener('click', function() {
+                closeModal();
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('search-content').style.display = 'block';
+            document.getElementById('detail-content').style.display = 'none';
+        }
+
+        function fetchSneakerData() {
+            const info = document.getElementById('info').value;
+            const category = document.getElementById('category').value;
+
+            if (info.length > 2) {  // Only fetch data if input length is greater than 2
+                fetch('http://localhost:4000/get-sneaker-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ info, category })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let resultArea = document.getElementById('results');
+                    resultArea.innerHTML = '';
+
+                    if (data.length === 0) {
+                        resultArea.innerHTML = '<li>No results found, try searching by SKU</li>';
+                    } else {
+                        data.forEach(item => {
+                            let shoeName = item.shoeName.replace(/"/g, "&quot;");
+                            let brand = item.brand.replace(/"/g, "&quot;");
+                            let sku = item.styleID.replace(/"/g, "&quot;");
+                            let description = item.description.replace(/"/g, "&quot;");
+                            let imageUrl = item.imageUrl.replace(/"/g, "&quot;");
+                            let listItem = document.createElement('li');
+                            listItem.innerHTML = `
+                                <a href="#" onclick='showProductDetails("${shoeName.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${brand.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${sku.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${description.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}", "${imageUrl}")'>
+                                    <img src="${imageUrl}" alt="${shoeName}" style="width: 50px; height: 50px; object-fit: cover;">
+                                    ${item.shoeName} - ${item.brand}
+                                </a>
+                            `;
+                            resultArea.appendChild(listItem);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function showProductDetails(shoeName, brand, sku, description, imageUrl) {
+            document.getElementById('shoe-name').value = shoeName;
+            document.getElementById('shoe-brand').value = brand;
+            document.getElementById('sku-info').value = sku;
+            document.getElementById('product-image').src = imageUrl;
+
+            let sizeInput = document.getElementById('size-info');
+            let sizeOutput = document.getElementById('size-output');
+            let hoodieSize = document.getElementById('hoodie-size');
+
+            if (shoeName.toLowerCase().includes('hoodie')) {
+                sizeInput.style.display = 'none';
+                sizeOutput.style.display = 'none';
+                hoodieSize.style.display = 'block';
+            } else {
+                sizeInput.style.display = 'block';
+                sizeOutput.style.display = 'block';
+                hoodieSize.style.display = 'none';
+
+                if (shoeName.includes('GS')) {
+                    sizeInput.min = 3.5;
+                    sizeInput.max = 7;
+                    sizeInput.step = 0.5;
+                    sizeInput.value = 3.5;
+                    sizeOutput.value = "3.5Y";
+                    sizeInput.oninput = function() {
+                        sizeOutput.value = this.value + "Y";
+                    };
+                } else if (shoeName.includes("Women's")) {
+                    sizeInput.min = 5;
+                    sizeInput.max = 15;
+                    sizeInput.step = 0.5;
+                    sizeInput.value = 5;
+                    sizeOutput.value = "5W";
+                    
+                    sizeInput.oninput = function() {
+                        sizeOutput.value = this.value + "W";
+                    };
+                } else {
+                    sizeInput.min = 1;
+                    sizeInput.max = 15;
+                    sizeInput.step = 0.5;
+                    sizeInput.value = 8;
+                    sizeOutput.value = "8";
+                    
+                    sizeInput.oninput = function() {
+                        sizeOutput.value = this.value;
+                    };
+                }
+            }
+
+
+            document.getElementById('search-content').style.display = 'none';
+            document.getElementById('detail-content').style.display = 'block';
+        }
+
+        function backToSearch() {
+            document.getElementById('search-content').style.display = 'block';
+            document.getElementById('detail-content').style.display = 'none';
+        }
+
+        function clearSearch() {
+            document.getElementById('info').value = '';
+            document.getElementById('results').innerHTML = '';
+        }
+    </script>
+    <style>
+        /* New CSS properties for a.inventory */
+        aside .sidebar a.inventory {
+            background: var(--color-light) !important;
+            color: var(--color-primary) !important;
+            margin-left: 0 !important;
+        }
+
+        aside .sidebar a.inventory::before {
+            content: '' !important;
+            width: 6px !important;
+            height: 100% !important;
+            background: var(--color-primary) !important;
+        }
+
+        aside .sidebar a.inventory span {
+            color: var(--color-primary) !important;
+            margin-left: calc(1rem - 3px) !important;
+        }
+
+        aside .sidebar a:hover span {
+            margin-left: 1.5rem !important;
+        }
+
+        /* Remove CSS properties for a.dashboard */
+        aside .sidebar a.dashboard {
+            background: none !important;
+            color: var(--color-info-dark) !important;
+            margin-left: 0 !important;
+        }
+
+        aside .sidebar a.dashboard::before {
+            content: '' !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: none !important;
+        }
+
+        aside .sidebar a.dashboard span {
+            color: var(--color-info-dark) !important;
+            margin-left: calc(1rem - 3px);
+        }
+
+        aside .sidebar a.dashboard:hover,
+        aside .sidebar a.dashboard:hover * {
+            color: var(--color-primary) !important;
+        }
+
+        .top {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .inventory-title {
+            margin: 0;
+        }
+
+        .inventory {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        hr {
+            border: 1px solid black; /* Makes the hr visible and black */
+            width: 100%; /* Makes the hr go across the screen */
+            margin: 0; /* Removes default margin */
+        }
+
+        .top-inventory {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: fixed; /* Stay in place */
+            top: 0;
+            left: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 500px;
+            height: auto;
+            background-color: white;
+            border-radius: 4px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            margin: 20px 0;
+        }
+
+        .search-bar input,
+        .search-bar select,
+        .search-bar button {
+            margin: 5px 0;
+        }
+
+        #results {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #results li {
+            margin: 5px 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .button-container button {
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-products {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .custom-product {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+    {% extends "dashboard.html" %}
+    {% block main %}
+    <div class="container">
+        <div class="top">
+            <div class="header">
+                <h1 class="inventory-title">Inventory</h1>
+                <a href="#" id="button" class="inventory">
+                    <span class="material-symbols-outlined">add_box</span>
+                </a>
+            </div>
+            <hr>
+        </div>
+
+        <div class="top-inventory" id="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+
+                <div id="search-content">
+                    <div class="search-bar">
+                        <h1>Search Marketplace</h1>
+                        <form onsubmit="event.preventDefault(); fetchSneakerData();">
+                            <label for="info">Search For A Product:</label>
+                            <input type="text" id="info" oninput="fetchSneakerData()" placeholder="">
+                            <label for="category">Select Category:</label>
+                            <select id="category" onchange="clearSearch(); fetchSneakerData();">
+                                <option value="sneakers">Sneakers</option>
+                                <option value="streetwear">Streetwear</option>
+                            </select>
+                            <ul id="results"></ul>
+                        </form>
+                    </div>
+                    <div class="button-container">
+                        <button class="custom-product" onclick="closeModal()">Create custom product</button>
+                    </div>
+                </div>
+
+                <div id="detail-content" style="display: none;">
+                    <div class="search-bar">
+                        <h1>Product Details</h1>
+                        <img id="product-image" src="" alt="Product Image" style="width: 100%; max-width: 300px; height: auto;"><br>
+                        <form id="product-form" method="POST" action="{% url 'inventory' %}">
+                            {% csrf_token %}
+                            <label for="shoe-name">Shoe Name:</label>
+                            <input type="text" id="shoe-name" name="name" readonly><br>
+                        
+                            <label for="shoe-brand">Brand:</label>
+                            <input type="text" id="shoe-brand" name="brand" readonly><br>
+                        
+                            <label for="sku-info">SKU:</label>
+                            <input type="text" id="sku-info" name="sku" readonly><br>
+                            
+                            <label for="description">Description:</label>
+                            <input type="text" id="description" name="description"><br>
+                        
+                            <label for="condition-info">Condition:</label>
+                            <select id="condition-info" name="condition">
+                                <option value="New">New</option>
+                                <option value="Used">Used</option>
+                                <option value="Lightly Used">Lightly Used</option>
+                            </select><br>
+                        
+                            <label for="size-info">Size:</label>
+                            <input type="range" id="size-info" name="size" min="1" max="15" step="0.5" oninput="document.getElementById('size-output').value = this.value">
+                            <output id="size-output">8</output><br>
+
+                            <!-- Add this block for hoodie sizes -->
+                            <div id="hoodie-size" style="display: none;">
+                                <label for="hoodie-size-select">Hoodie Size:</label>
+                                <select id="hoodie-size-select" name="hoodie_size">
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                    <option value="X-Large">X-Large</option>
+                                </select><br>
+                            </div>
+
+                        
+                            <label for="price-paid-info">Price Paid:</label>
+                            <input type="range" id="price-paid-info" name="price_paid" min="0" max="1000" step="10" oninput="document.getElementById('price-paid-output').value = this.value">
+                            <output id="price-paid-output">0</output><br>
+                        
+                            <label for="price-sold-info">Price Sold:</label>
+                            <input type="range" id="price-sold-info" name="price_sold" min="0" max="1000" step="10" oninput="document.getElementById('price-sold-output').value = this.value">
+                            <output id="price-sold-output">0</output><br>
+                        
+                            <label for="quantity-info">Quantity:</label>
+                            <input type="range" id="quantity-info" name="quantity" min="1" max="100" step="1" oninput="document.getElementById('quantity-output').value = this.value">
+                            <output id="quantity-output">1</output><br>
+                            
+                            <button type="submit" class="add-products">Submit</button>
+                        </form>
+                    </div>
+                    <div class="button-container">
+                        <button class="custom-product" onclick="backToSearch()">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="profile picture" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

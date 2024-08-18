@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Sneaker Tracker</title>
+    {% load static %}
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            {% block left %}
+            <div class="top">
+                <div class="logo">
+                    <img src="#add logo">
+                    <h2> NAM <span class="logos">  </span> NAME</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="#" class="dashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+
+                <a href="inventory" class="inventory">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <h3>Inventory</h3>
+                </a>
+
+
+                <a href="#" class="analytics">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <h3>Analytics</h3>
+                </a>
+
+                <a href="#" class="settings">
+                    <span class="material-symbols-outlined">settings</span>
+                    <h3>Settings</h3>
+                </a>
+
+
+                <a href="#" class="product">
+                    <span class="material-symbols-outlined">add</span>
+                    <h3>Add Product</h3>
+                </a>
+                <a href="{% url 'logout' %}" class="logout-link">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            {% endblock %}
+        </aside>
+        {% block main %}
+
+            
+        </main>
+        {% endblock %}
+        {% block right %}
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-symbols-outlined active">light_mode</span>
+                    <span class="material-symbols-outlined">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Welcome, <b>{{ request.user }}</b></p>
+                        <small class="text-muted"></small>
+                    </div>
+                    <div class="profile-picture">
+                        <img src="profile picture" alt="Profile Picture">
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-updates">
+                <center><h2>Recent Updates</h2></center>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo"></div>
+                        <img src="profile picture" alt="Profile Picture">
+                        <div class="message">
+                            <p><b>Message</b>Put Messages here</p>
+                            <small class="text-muted">2 minutes ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        {% endblock %}
+    </div>
+
+    </div>
+    <script src="{% static 'script/dashboard.js' %}"></script>
+</body>
+</html>

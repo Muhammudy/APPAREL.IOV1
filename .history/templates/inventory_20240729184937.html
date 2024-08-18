@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <style>
+        :root {
+            --color-primary: #7380ec;
+            --color--primary--shade: #c5caf3; 
+            --color-logos: #ff7782;
+            --color-success: #41f1b6;
+            --color-warning: #ffbb55;
+            --color-white: #fff;
+            --color-info-dark: #7d8da1;
+            --color-info-light: #dce1eb;
+            --color-dark: #363949;
+            --color-light: rgba(132, 139, 200, 0.18);
+            --color-primary-variant: #111e88;
+            --color-dark-variant: #677483;
+            --color-background: #f6f6f9;
+            --card-border-radius: 2rem;
+            --border-radius-1: 0.4rem;
+            --border-radius-2: 0.8rem;
+            --border-radius-3: 1.2rem;
+            --card-padding: 1.8rem;
+            --padding-1: 1.2rem;
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--card-border-radius);
+            width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-content .close:hover,
+        .modal-content .close:focus {
+            color: var(--color-primary);
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .form-row label {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+
+        .form-row input[type="text"],
+        .form-row input[type="number"],
+        .form-row input[type="range"],
+        .form-row select,
+        .form-row textarea,
+        .form-row input[type="file"] {
+            padding: 0.8rem;
+            border-radius: var(--border-radius-1);
+            border: 2px solid var(--color-info-dark);
+            font-size: 1rem;
+            color: var(--color-dark);
+            background: var(--color-white);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-row input[type="text"]:focus,
+        .form-row input[type="number"]:focus,
+        .form-row input[type="range"]:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(115, 128, 236, 0.5);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .button-container .submit-button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: var(--border-radius-1);
+            cursor: pointer;
+            background-color: var(--color-primary);
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container .submit-button:hover {
+            background-color: var(--color-primary-variant);
+        }
+
+        .top-inventory {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-content .close:hover,
+        .modal-content .close:focus {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .modal-content #search-content {
+            overflow-y: auto;
+            height: calc(100% - 60px);
+        }
+
+        .modal-content #search-content .search-bar {
+            font-size: 2rem;
+        }
+
+        .form-row #hoodie-size {
+            margin-bottom: 2rem;
+        }
+
+        .data-sneakers table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-sneakers th,
+        .data-sneakers td {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .data-sneakers tbody {
+            font-size: 1.2rem;
+            color: var(black);
+        }
+
+        .data-sneakers th {
+            padding-bottom: 2rem;
+            font-size: 1rem;
+            border-radius: var(--card-border-radius);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .data-sneakers tr:nth-child(even) {
+            background-color: var(--color--primary--shade);
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const button = document.getElementById('button');
+    const modal = document.getElementById('modal');
+    const closeModalButton = document.querySelector('.close');
+    const categorySelect = document.getElementById('category');
+    const sizeContainer = document.getElementById('size-container');
+    const hoodieSizeContainer = document.getElementById('hoodie-size-container');
+    const customProductButton = document.querySelector('.custom-product');
+    const customProductModal = document.getElementById('custom-product-modal');
+    const closeCustomProductButton = customProductModal.querySelector('.close');
+
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        modal.style.display = 'flex';
+    });
+
+    closeModalButton.addEventListener('click', function() {
+        closeModal();
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    categorySelect.addEventListener('change', function() {
+        handleCategoryChange(this.value);
+    });
+
+    customProductButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        customProductModal.style.display = 'flex';
+    });
+
+    closeCustomProductButton.addEventListener('click', function() {
+        closeCustomProductModal();
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === customProductModal) {
+            closeCustomProductModal();
+        }
+    });
+
+    function closeModal() {
+        modal.style.display = 'none';
+        document.getElementById('search-content').style.display = 'block';
+        document.getElementById('detail-content').style.display = 'none';
+    }
+
+    function closeCustomProductModal() {
+        customProductModal.style.display = 'none';
+    }
+
+    function handleCategoryChange(category) {
+        if (category === 'Streetwear') {
+            sizeContainer.style.display = 'none';
+            hoodieSizeContainer.style.display = 'flex';
+        } else {
+            sizeContainer.style.display = 'flex';
+            hoodieSizeContainer.style.display = 'none';
+        }
+    }
+
+    // Initialize the toggle based on the default category value
+    handleCategoryChange(categorySelect.value);
+});
+
+    </script>
+</head>
+<body>
+    {% extends "dashboard.html" %}
+    {% block main %}
+    <div class>
+        <div class="header">
+            <h1 class="inventory-title">Inventory</h1>
+            <a href="#" id="button" class="inventory">
+                <span class="material-symbols-outlined">add_box</span>
+            </a>
+        </div>
+
+        <div class="container-main">
+            <div class="tops">
+                <hr>
+                <div class="max-class">
+                    <div class="data-sneakers">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="color: transparent;">Logo</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>SKU</th>
+                                    <th>Condition</th>
+                                    <th>Size</th>
+                                    <th>Purchase Price</th>
+                                    <th>Sale Price</th>
+                                    <th>Status</th>
+                                    <th>Quantity</th>
+                                    <th style="color: transparent;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in inventory_items %}
+                                <tr>
+                                    <td><img src="{{ item.imageUrl }}" style="width: 50px; height: auto;"></td>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.description }}</td>
+                                    <td>{{ item.sku }}</td>
+                                    <td>{{ item.condition }}</td>
+                                    {% if item.size == "N/A" %}
+                                    <td>{{ item.apparel_size }}</td>
+                                    {% else %}
+                                    <td>{{ item.size }}</td>
+                                    {% endif %}
+                                    <td>{{ item.price_paid }}</td>
+                                    <td>{{ item.price_sold }}</td>
+                                    <td>{{ item.status }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>
+                                        <a href="{% url 'update-inventory' item.id %}">
+                                            <span class="material-symbols-outlined">edit</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="top-inventory" id="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+
+                <div id="search-content">
+                    <div class="search-bar">
+                        <form onsubmit="event.preventDefault(); fetchSneakerData();">
+                            <div class="form-row">
+                                <label for="info">Search Catalog:</label>
+                                <input type="text" id="info" oninput="fetchSneakerData()" placeholder="">
+                            </div>
+                            <div class="form-row">
+                                <label for="category">Category:</label>
+                                <select id="category" name="category" onchange="clearSearch(); fetchSneakerData();">
+                                    <option value="Sneakers">Footwear</option>
+                                    <option value="Streetwear">Apparel</option>
+                                </select>
+                            </div>
+                            <ul id="results"></ul>
+                        </form>
+                    </div>
+                    <div class="button-container">
+                        <button class="custom-product" onclick="customProductButton()">Custom Product</button>
+                    </div>
+                </div>
+
+                <div id="custom-product-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeCustomProductModal()">&times;</span>
+                        <h1>Create Custom Product</h1>
+                        <form id="custom-product-form" method="POST" action="{% url 'inventory' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <label for="custom-shoe-name">Product Name:</label>
+                                <input type="text" id="custom-shoe-name" name="name" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-brand">Brand:</label>
+                                <input type="text" id="custom-brand" name="brand" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-sku">SKU:</label>
+                                <input type="text" id="custom-sku" name="sku" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-description">Description:</label>
+                                <textarea id="custom-description" name="description" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-condition">Condition:</label>
+                                <select id="custom-condition" name="condition">
+                                    <option value="New">New</option>
+                                    <option value="Used">Used</option>
+                                    <option value="Lightly Used">Lightly Used</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-category">Category:</label>
+                                <select id="custom-category" name="category" onchange="toggleSizeFields()">
+                                    <option value="Sneakers">Footwear</option>
+                                    <option value="Streetwear">Apparel</option>
+                                </select>
+                            </div>
+                            <div class="form-row" id="size-containerr">
+                                <label for="size-info" class="size-label">Size:</label>
+                                <input type="range" id="size-info" name="size" min="1" max="15" step="0.5" oninput="document.getElementById('size-output').value = this.value">
+                                <output id="size-output">8</output>
+                            </div>
+                            <div class="form-row" id="hoodie-size-containerr" style="display: none;">
+                                <label for="hoodie-size-select">Apparel Size:</label>
+                                <select id="hoodie-size-select" name="apparel_size">
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                    <option value="X-Large">X-Large</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-price-paid">Price Paid:</label>
+                                <input type="number" id="custom-price-paid" name="price_paid" min="0" max="10000" step="0.01" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-price-sold">Price Sold:</label>
+                                <input type="number" id="custom-price-sold" name="price_sold" min="0" max="10000" step="0.01">
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-status">Status:</label>
+                                <select id="custom-status" name="status">
+                                    <option value="Available">Available</option>
+                                    <option value="Sold">Sold</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-quantity">Quantity:</label>
+                                <input type="number" id="custom-quantity" name="quantity" min="1" max="100" step="1" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="custom-image">Product Image:</label>
+                                <input type="file" id="custom-image" name="image">
+                            </div>
+                            <div class="button-container">
+                                <button type="submit" class="submit-button">Create Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="detail-content" style="display: none;">
+                    <div class="search-bar">
+                        <h1>Product Details</h1>
+                        <div class="image-container">
+                            <img id="product-image" src="" alt="Product Image">
+                        </div>
+                        <form id="product-form" method="POST" action="{% url 'inventory' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <label for="shoe-name">Product Name:</label>
+                                <input type="text" id="shoe-name" name="name" readonly><br>
+                            </div>
+                            <div class="form-row">
+                                <label for="shoe-brand">Brand:</label>
+                                <input type="text" id="shoe-brand" name="brand" readonly><br>
+                            </div>
+                            <div class="form-row">
+                                <label for="sku-info">SKU:</label>
+                                <input type="text" id="sku-info" name="sku" readonly><br>
+                            </div>
+                            <div class="form-row">
+                                <label for="description">Description:</label>
+                                <input type="text" id="description" name="description"><br>
+                            </div>
+                            <div class="form-row">
+                                <label for="condition-info">Condition:</label>
+                                <select id="condition-info" name="condition">
+                                    <option value="New">New</option>
+                                    <option value="Used">Used</option>
+                                    <option value="Lightly Used">Lightly Used</option>
+                                </select><br>
+                            </div>
+                            <div class="form-row" id="size-container">
+                                <label for="size-info" class="size-label">Size:</label>
+                                <input type="range" id="size-info" name="size" min="1" max="15" step="0.5" oninput="document.getElementById('size-output').value = this.value">
+                                <output id="size-output" style="display:none">8</output><br>
+                                <div class="form-row" style="display:none;">
+                                    <input type="text" id="size-hidden-input" name="size" value="N/A">
+                                </div>
+                            </div>
+                            <div class="form-row" id="hoodie-size" style="display: none;">
+                                <label for="hoodie-size-select">Size:</label>
+                                <select id="hoodie-size-select" name="apparel_size">
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                    <option value="X-Large">X-Large</option>
+                                </select><br>
+                            </div>
+                            <div class="form-row" style="display:none;">
+                                <input type="text" id="apparel-size-input" name="apparel_size" value="N/A">
+                            </div>
+                            <div class="form-row">
+                                <label for="price-paid-info">Price Paid:</label>
+                                <input type="number" id="price-paid-info" name="price_paid" min="0" max="10000" step="0.01" oninput="document.getElementById('price-paid-output').value = this.value">
+                            </div>
+                            <div class="form-row">
+                                <label for="price-sold-info">Price Sold:</label>
+                                <input type="number" id="price-sold-info" name="price_sold" min="0" max="10000" step="0.01" oninput="document.getElementById('price-sold-output').value = this.value">
+                            </div>
+                            <div class="form-row">
+                                <label for="status-info">Status:</label>
+                                <select id="status-info" name="status">
+                                    <option value="Available">Available</option>
+                                    <option value="Sold">Sold</option>
+                                </select><br>
+                            </div>
+                            <div class="form-row">
+                                <label for="quantity-info">Quantity:</label>
+                                <input type="number" id="quantity-info" name="quantity" min="1" max="100" step="1" oninput="document.getElementById('quantity-output').value = this.value">
+                            </div>
+                            <div class="form-row">
+                                <label for="category-info">Category:</label>
+                                <input type="text" id="category-info" name="category" readonly><br>
+                            </div>
+                            <div>
+                                <div class="form-row">
+                                    <input type="hidden" id="image-url" name="imageUrl" value="">
+                                </div>
+                            </div>
+                            <div class="button-container">
+                                <button type="submit" class="add-products"><span class="material-symbols-outlined">check</span></button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="button-container">
+                        <button class="back-btn" onclick="backToSearch()"><span class="material-symbols-outlined">arrow_back</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="profile picture" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

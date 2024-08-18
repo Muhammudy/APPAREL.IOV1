@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <style>
+        :root {
+            --color-primary: #7380ec;
+            --color-primary-shade: #c5caf3;
+            --color-logos: #ff7782;
+            --color-success: #41f1b6;
+            --color-warning: #ffbb55;
+            --color-white: #fff;
+            --color-info-dark: #7d8da1;
+            --color-info-light: #dce1eb;
+            --color-dark: #363949;
+            --color-light: rgba(132, 139, 200, 0.18);
+            --color-primary-variant: #111e88;
+            --color-dark-variant: #677483;
+            --color-background: #f6f6f9;
+            --color-black: #000000;
+
+            --card-border-radius: 2rem;
+            --border-radius-1: 0.4rem;
+            --border-radius-2: 0.8rem;
+            --border-radius-3: 1.2rem;
+
+            --card-padding: 1.8rem;
+            --padding-1: 1.2rem;
+
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        .navbar {
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .navbar .logo h1 {
+            margin: 0;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .navbar .nav-links a {
+            margin: 0 1rem;
+            color: var(--color-white);
+            text-decoration: none;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .navbar .nav-links a:hover {
+            color: var(--color-success);
+        }
+
+        .jumbotron {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 5rem 2rem;
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .jumbotron h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .jumbotron p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .jumbotron .btn-primary {
+            background-color: var(--color-success);
+            border: none;
+            border-radius: var(--border-radius-3);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+        }
+
+        .features-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+
+        .features-section .feature-box {
+            width: 30%;
+            background-color: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .features-section .feature-box:hover {
+            transform: translateY(-10px);
+        }
+
+        .features-section .feature-box .icon {
+            margin-bottom: 1.5rem;
+        }
+
+        .features-section .feature-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cardboard-boxes {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 3rem;
+        }
+
+        .cardboard-box {
+            width: 30%;
+            background-color: var(--color-light);
+            padding: 2rem;
+            border-radius: var(--card-border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .cardboard-box img {
+            width: 100%;
+            border-radius: var(--border-radius-2);
+        }
+
+        .call-to-action {
+            margin-top: 5rem;
+            padding: 3rem;
+            background-color: var(--color-light);
+            border-radius: var(--card-border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .call-to-action h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .call-to-action p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .call-to-action .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius-3);
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+
+        footer {
+            margin-top: 5rem;
+            padding: 2rem;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+            border-radius: var(--card-border-radius);
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <a href="/">
+                <h1>Sneaker Tracker</h1>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/dashboard">Add Inventory</a>
+            <a href="/login">Login/Sign Up</a>
+        </div>
+    </div>
+    <hr>
+    <div class="container-fluid">
+        <!-- Hero Section -->
+        <div class="jumbotron text-center">
+            <h1 class="display-4">Welcome to Sneaker Tracker</h1>
+            <p class="lead">Track and manage your sneaker collection effortlessly.</p>
+            <a href="#" class="btn btn-primary btn-lg" role="button">Get Started</a>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="feature-box">
+                <div class="icon">
+                    <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--color-primary);">inventory_2</span>
+                </div>
+                <h3>Manage Inventory</h3>
+                <p>Easily keep track of your sneaker collection with detailed records of each item.</p>
+            </div>
+            <div class="feature-box">
+                <div class="icon">
+                    <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--color-primary);">analytics</span>
+                </div>
+                <h3>Analyze Trends</h3>
+                <p>Get insights into your collection with analytics and trend reports.</p>
+            </div>
+            <div class="feature-box">
+                <div class="icon">
+                    <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--color-primary);">notifications</span>
+                </div>
+                <h3>Stay Notified</h3>
+                <p>Receive notifications when prices change or when new sneakers are added to your list.</p>
+            </div>
+        </div>
+
+        <!-- Cardboard Boxes Section for GIFs -->
+        <div class="cardboard-boxes">
+            <div class="cardboard-box">
+                <h3>Feature 1</h3>
+                <img src="{% static 'images/feature1.gif' %}" alt="Feature 1 GIF">
+                <p>Description of feature 1.</p>
+            </div>
+            <div class="cardboard-box">
+                <h3>Feature 2</h3>
+                <img src="{% static 'images/feature2.gif' %}" alt="Feature 2 GIF">
+                <p>Description of feature 2.</p>
+            </div>
+            <div class="cardboard-box">
+                <h3>Feature 3</h3>
+                <img src="{% static 'images/feature3.gif' %}" alt="Feature 3 GIF">
+                <p>Description of feature 3.</p>
+            </div>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="call-to-action">
+            <h2>Ready to start tracking?</h2>
+            <p>Join thousands of sneaker enthusiasts who trust Sneaker Tracker.</p>
+            <a href="#" class="btn btn-primary">Sign Up Now</a>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Sneaker Tracker. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+
+</html>

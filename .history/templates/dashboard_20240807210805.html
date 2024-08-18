@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Sneaker Tracker</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <script>
+        function fetchMostPopularSneakers() {
+            fetch('http://localhost:4000/get-most-popular')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let updates = document.querySelectorAll('.update');
+                    if (data.length === 0) {
+                        updates.forEach(update => {
+                            update.querySelector('.message').innerHTML = '<p>No popular sneakers found.</p>';
+                        });
+                    } else {
+                        updates.forEach((update, index) => {
+                            if (index < data.length) {
+                                let item = data[index];
+                                let shoeName = item.shoeName.replace(/"/g, "&quot;");
+                                let brand = item.brand.replace(/"/g, "&quot;");
+                                let releaseDate = item.releaseDate;
+                                let retailPrice = item.retailPrice;
+                                let img = item.imageUrl.replace(/"/g, "&quot;");
+                                
+                                update.querySelector('.profile-photo img').src = img;
+                                update.querySelector('.message').innerHTML = `
+                                    <p><b>${shoeName} - ${brand}</b></p>
+                                    <p>Release Date: ${releaseDate}</p>
+                                    <p>Retail Price: $${retailPrice}</p>
+                                `;
+                                
+                            } else {
+                                update.querySelector('.message').innerHTML = '<p>No more popular sneakers found.</p>';
+                            }
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMostPopularSneakers();
+        });
+    </script>
+
+    <style>
+        :root {
+    --color-primary: #7380ec;
+    --color-logos: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+
+/*----------------------------------darkthemes--------------*/
+
+.dark-theme-variables {
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+    .profile-photo {
+    margin-left: 2rem;
+    width: 15rem;
+    height: 10rem;
+    border-radius: 10%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--color-primary);
+        }
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the element */
+}
+.update .message{
+    font-size: 1rem;
+    margin-top: 10rem;
+    text-align: left;
+    margin-left: -40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.update .message p {
+    margin-top: 0.7rem;
+    font-size: 1.1rem;
+}
+
+
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside>
+            {% block left %}
+            <div class="top">
+                <div class="logo">
+                    <img src="#add logo">
+                    <h2> Appare <span class="logos">  </span> NAME</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="#" class="dashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href= "{% url 'inventory' %}" class="inventory">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <h3>Inventory</h3>
+                </a>
+
+                <a href="#" class="analytics">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <h3>Analytics</h3>
+                </a>
+
+                <a href="{% url 'settings' %}" class="settings">
+                    <span class="material-symbols-outlined">settings</span>
+                    <h3>Settings</h3>
+                </a>
+                <a href="{% url 'logout' %}" class="logout-link">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            {% endblock %}
+        </aside>
+        {% block main %}
+        <main>
+            <h1>Dashboard</h1>
+            <div class="date">
+                <input type="date">
+            </div>
+            <div class="insights">
+                <div class="sales">
+                    <span class="material-symbols-outlined">bar_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total Sales</h3>
+                            <h1>Amount</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx='45' cy='47' r='36'></circle>
+                            </svg>
+                            <div class="number">
+                                <p>percentage</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+
+                <div class="inventory">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total Inventory</h3>
+                            <h1>Amount</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx='45' cy='47' r='36'></circle>
+                            </svg>
+                            <div class="number">
+                                <p>percentage</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+
+                <div class="profit">
+                    <span class="material-symbols-outlined">finance_chip</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total Profit</h3>
+                            <h1>Amount</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx='45' cy='47' r='36'></circle>
+                            </svg>
+                            <div class="number">
+                                <p>percentage</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+            </div>
+
+            <div class="recent-inventory">
+                <h2>Recent Inventory</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>SKU</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Condition</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in inventory_items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.sku }}</td>
+                            <td>{{ item.size }}</td>
+                            <td class="warning">{{ item.price }}</td>
+                            <td>{{ item.condition }}</td>
+                            <td>{{ item.status }}</td>
+                            <td class="primary">Details</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{% url 'inventory' %}">Show All</a>
+            </div>
+            
+        </main>
+        {% endblock %}
+        {% block right %}
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-symbols-outlined active">light_mode</span>
+                    <span class="material-symbols-outlined">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Welcome, <b>{{ request.user }}</b></p>
+                        <small class="text-muted"></small>
+                    </div>
+                    <div class="profile-picture">
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-updates">
+                <center><h2>Top Sellers</h2></center>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message"></div>
+                    </div>
+                </div>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message"></div>
+                    </div>
+                </div>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message">
+                        </div>
+                    </div>
+                </div>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endblock %}
+
+    </div>
+    <script src="{% static 'script/dashboard.js' %}"></script>
+
+</body>
+</html>

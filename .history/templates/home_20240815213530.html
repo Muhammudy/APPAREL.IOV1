@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APPAREL.IO</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <style>
+        :root {
+            --color-primary: #7380ec;
+            --color-secondary: #111e88;
+            --color-success: #22C55E;
+            --color-warning: #F59E0B;
+            --color-background: #F3F4F6;
+            --color-white: #FFFFFF;
+            --color-dark: #111827;
+            --color-light: #E5E7EB;
+            --border-radius: 0.75rem;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--color-white);
+            color: var(--color-dark);
+            box-shadow: var(--box-shadow);
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .navbar .logo-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .navbar .logo {
+            font-size: 2rem;
+            color: black;
+            text-align: center;
+        }
+
+        .navbar .nav-links a {
+            color: var(--color-dark);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navbar .nav-links a:hover {
+            color: var(--color-primary);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .navbar .logo-container {
+                order: 1;
+                margin-bottom: 1rem;
+            }
+
+            .navbar .nav-links {
+                order: 2;
+                justify-content: center;
+                width: 100%;
+            }
+            .cardboard-box img{
+                height: 100%;
+                width: 100%;
+
+            }
+        }
+
+        .jumbotron {
+            background: linear-gradient(135deg, #7380ec, #22C55E);
+            color: var(--color-white);
+            padding: 5rem 2rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            margin: 2rem 0;
+            border-radius: var(--border-radius);
+        }
+
+        .typewriter h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 0.15em solid var(--color-white);
+            width: 17ch;
+            animation: typing 3.5s steps(21, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 17ch;
+            }
+        }
+
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: var(--color-white);
+            }
+        }
+
+        .jumbotron p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .jumbotron .btn-primary {
+            background-color: var(--color-secondary);
+            color: var(--color-white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .jumbotron .btn-primary:hover {
+            background-color: var(--color-warning);
+        }
+
+        .features-section {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            gap: 2rem;
+        }
+
+        .features-section .feature-box {
+            flex: 1;
+            background-color: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .features-section .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .features-section .feature-box .icon {
+            margin-bottom: 1.5rem;
+        }
+
+        .features-section .feature-box .icon span {
+            font-size: 3.5rem;
+            color: var(--color-primary);
+        }
+
+        .features-section .feature-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .features-section .feature-box p {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .cardboard-boxes {
+            display: flex;
+            justify-content: space-around;
+            margin: 4rem 0;
+            gap: 2rem;
+        }
+
+        .cardboard-box {
+            flex: 1;
+            background-color: var(--color-white);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cardboard-box img {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cardboard-box:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .cardboard-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .cardboard-box p {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .cardboard-box .description {
+            font-size: 1.1rem;
+            color: var(--color-dark);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cardboard-box:hover .description {
+            opacity: 1;
+        }
+
+        .call-to-action {
+            background-color: var(--color-light);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            margin: 4rem 0;
+        }
+
+        .call-to-action h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .call-to-action p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .call-to-action .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .call-to-action .btn-primary:hover {
+            background-color: var(--color-secondary);
+        }
+
+        footer {
+            padding: 2rem;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        footer p {
+            margin: 0;
+            font-weight: 400;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/dashboard">Add Inventory</a>
+        </div>
+        <div class="logo-container">
+            <h1 class="logo">APPAREL.IO</h1>
+        </div>
+        <div class="nav-links">
+            <a href="/login">Login</a>
+            <a href="/register">Sign Up</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Hero Section -->
+        <div class="jumbotron">
+            <div class="typewriter">
+                <h1>Welcome to APPAREL.IO</h1>
+            </div>
+            <p>Track and manage your sneaker collection effortlessly.</p>
+            <a href="/login" class="btn btn-primary">Get Started</a>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="feature-box">
+                <div class="icon">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                </div>
+                <h3>Manage Inventory</h3>
+                <p>Easily keep track of your sneaker collection with detailed records of each item.</p>
+            </div>
+            <div class="feature-box">
+                <div class="icon">
+                    <span class="material-symbols-outlined">analytics</span>
+                </div>
+                <h3>Set Goals</h3>
+                <p>Set and achieve your collection goals with detailed analytics and trend reports, helping you track progress and maximize your sneaker investments.</p>
+            </div>
+        </div>
+
+        <!-- Cardboard Boxes Section for GIFs -->
+        <div class="cardboard-boxes">
+            <div class="cardboard-box">
+                <img src="{% static 'images/inventory.png' %}" alt="Inventory">
+                <p class="description">Manage all your sneakers effectively with comprehensive inventory tools.</p>
+            </div>
+            <div class="cardboard-box">
+                <img src="{% static 'images/goals.png' %}" alt="Goals">
+                <p class="description">Set goals and track progress to maximize your sneaker investments.</p>
+            </div>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="call-to-action">
+            <h2>Ready to start tracking?</h2>
+            <p>Join thousands of sneaker enthusiasts who trust APPAREL.IO.</p>
+            <a href="/register" class="btn btn-primary">Sign Up Now</a>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 APPAREL.IO. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Sneaker Tracker</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <script>
+        function fetchMostPopularSneakers() {
+            fetch('http://localhost:4000/get-most-popular')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let updates = document.querySelectorAll('.update');
+                    if (data.length === 0) {
+                        updates.forEach(update => {
+                            update.querySelector('.message').innerHTML = '<p>No popular sneakers found.</p>';
+                        });
+                    } else {
+                        updates.forEach((update, index) => {
+                            if (index < data.length) {
+                                let item = data[index];
+                                let shoeName = item.shoeName.replace(/"/g, "&quot;");
+                                let brand = item.brand.replace(/"/g, "&quot;");
+                                let releaseDate = item.releaseDate;
+                                let retailPrice = item.retailPrice;
+                                let img = item.imageUrl.replace(/"/g, "&quot;");
+                                
+                                update.querySelector('.profile-photo img').src = img;
+                                update.querySelector('.message').innerHTML = `
+                                    <p><b>${shoeName} - ${brand}</b></p>
+                                    <p>Release Date: ${releaseDate}</p>
+                                    <p>Retail Price: $${retailPrice}</p>
+                                `;
+                                
+                            } else {
+                                update.querySelector('.message').innerHTML = '<p>No more popular sneakers found.</p>';
+                            }
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMostPopularSneakers();
+        });
+
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const circles = document.querySelectorAll(".progress circle");
+    circles.forEach((circle, index) => {
+        const percentage = parseFloat(circle.nextElementSibling.querySelector('p').innerText);
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percentage / 100) * circumference;
+        
+        circle.style.strokeDashoffset = offset;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const metricsSelector = document.getElementById('metrics-selector');
+    const dailyMetrics = document.getElementById('daily-metrics');
+    const monthlyMetrics = document.getElementById('monthly-metrics');
+    const yearlyMetrics = document.getElementById('yearly-metrics');
+
+    if (!metricsSelector || !dailyMetrics || !monthlyMetrics || !yearlyMetrics) {
+        console.error('One or more metric elements could not be found.');
+        return;
+    }
+
+    function toggleMetrics() {
+        const selectedValue = metricsSelector.value;
+        console.log(`Selected value: ${selectedValue}`);
+
+        // Hide all metrics containers
+        dailyMetrics.style.display = 'none';
+        monthlyMetrics.style.display = 'none';
+        yearlyMetrics.style.display = 'none';
+
+        // Toggle the selected metrics container
+        if (selectedValue === 'daily') {
+            console.log('Showing daily metrics');
+            dailyMetrics.style.display = 'flex';
+        } else if (selectedValue === 'monthly') {
+            console.log('Showing monthly metrics');
+            monthlyMetrics.style.display = 'flex';
+        } else if (selectedValue === 'yearly') {
+            console.log('Showing yearly metrics');
+            yearlyMetrics.style.display = 'flex';
+        }
+    }
+
+    metricsSelector.addEventListener('change', toggleMetrics);
+
+    // Trigger the change event on page load to show the default selection
+    toggleMetrics();
+});
+
+
+
+    </script>
+
+    <style>
+        :root {
+    --color-primary: #7380ec;
+    --color-primary-shade: #c5caf3;
+    --color-logos: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+
+/*----------------------------------darkthemes--------------*/
+
+.dark-theme-variables {
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+.profile-photo {
+    margin-left: 2rem;
+    width: 15rem;
+    height: 10rem;
+    border-radius: 10%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--color-primary);
+        }
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the element */
+}
+.update .message{
+    font-size: 1rem;
+    margin-top: 10rem;
+    text-align: left;
+    margin-left: -40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.update .message p {
+    margin-top: 0.7rem;
+    font-size: 1.1rem;
+}
+.profile-picture {
+    margin-top: 1.3rem;
+    margin-right: 5rem;
+    margin-left: auto;
+    width: 200px;
+    height: 125px; /* Ensures a perfect circle */
+    border-radius: 50%; /* Simplified to 50% for a perfect circle */
+    overflow: hidden;
+    display: flex;
+    
+    border: 3px solid var(--color-primary); /* Increased border thickness for emphasis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added hover effects */
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire container */
+}
+
+.profile-picture:hover {
+    cursor: pointer;
+    transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.profile .info {
+    margin-left: 1rem;
+    font-size: 1.2rem; /* Slightly larger font for better readability */
+    color: var(--color-dark); /* Use a variable color for consistency */
+    text-align: center; /* Center the text within the info section */
+    margin-top: 1rem; /* Added margin for spacing */
+    line-height: 1.5; /* Increased line height for better text readability */
+}
+.recent-inventory {
+    width: 100%;
+    border-collapse: collapse; /* Ensures there are no gaps between table cells */
+    margin: 0;
+    padding: 0;
+}
+
+.metrics-container {
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    width: 100%; /* Ensure the container takes full width */
+}
+
+.recent-inventory table {
+    width: 100%;
+    border-collapse: collapse; /* No gaps between cells */
+}
+
+.recent-inventory th,
+.recent-inventory td {
+    padding: 1rem;
+    text-align: center;
+    border: none; /* Removes any default borders */
+    margin: 0; /* Ensures there are no gaps */
+    box-sizing: border-box; /* Ensures padding is included within the width/height */
+}
+
+.recent-inventory tbody {
+    font-size: 1.2rem;
+    color: var(--black); /* Assuming --black is defined in your CSS */
+}
+
+.recent-inventory th {
+    padding-bottom: 2rem;
+    font-size: 1rem;
+    border-radius: var(--card-border-radius); /* Assuming --card-border-radius is defined */
+    text-align: center;
+    white-space: nowrap; /* Prevents text from wrapping to the next line */
+    background-color: var(--color-secondary); /* Optional: Add background color to th */
+    color: var(--text-primary); /* Optional: Ensure text color contrasts well */
+}
+
+.recent-inventory tbody tr:nth-child(odd) {
+    background-color: var(--color-primary-shade); /* Full-width background color */
+}
+
+
+
+.theme{
+    margin-top: 1rem;
+}
+.form-group {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600; /* Slightly lighter than bold for better readability */
+    color: var(--color-text-dark); /* Using a variable for text color for better theme support */
+}
+
+.form-group input,
+.form-group select {
+    font-family:'DM Sans', sans-serif;
+    text-align: center;
+    width: 30%;
+    padding: 0.75rem; /* Increased padding for better touch targets on mobile devices */
+    border: 1px solid var(--color-info-dark);
+    border-radius: var(--border-radius-1);
+    background-color: var(--color-bg-light); /* Use a variable for background color to support theming */
+    font-size: 1.3rem; /* Set a base font size for better consistency */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth focus effects */
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary); /* Add a subtle shadow to indicate focus */
+    outline: none; /* Remove default outline for a cleaner look */
+}
+
+/* Optional: Hover state for better user feedback */
+.form-group input:hover,
+.form-group select:hover {
+    border-color: var(--color-primary-light);
+}
+
+
+
+
+.number {
+    position: relative;
+    top: -60px;
+    left: 30px;
+}
+
+
+
+
+
+
+
+
+
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside>
+            {% block left %}
+            <div class="top">
+                <div class="logo">
+                    <img src="#add logo">
+                    <h2> Appare <span class="logos">  </span> NAME</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="#" class="dashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href= "{% url 'inventory' %}" class="inventory">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <h3>Inventory</h3>
+                </a>
+
+                <a href="#" class="analytics">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <h3>Analytics</h3>
+                </a>
+
+                <a href="{% url 'settings' %}" class="settings">
+                    <span class="material-symbols-outlined">settings</span>
+                    <h3>Settings</h3>
+                </a>
+                <a href="{% url 'logout' %}" class="logout-link">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            {% endblock %}
+        </aside>
+        {% block main %}
+        <main>
+            <h1>Dashboard</h1>
+            <div class="form-group">
+                <label for="metrics-selector" class="form-label">View Metrics:</label>
+                <select id="metrics-selector" name="metrics" class="form-control">
+                    <option value="daily">Daily</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                    
+                </select>
+            </div>
+            
+            <!-- Daily Metrics Container -->
+            <div id="daily-metrics" class="metrics-container">
+                <div class="insights">
+                    <!-- Total Sales -->
+                    <div class="sales">
+                        <span class="material-symbols-outlined">bar_chart</span>
+                        <div class="middle">
+                            <div class="left">
+                                <h3>Total Sales</h3>
+                                <h1>{{ daily_total_sales }}</h1>
+                            </div>
+                            <div class="progress">
+                                <svg>
+                                    <circle cx="45" cy="47" r="{{ daily_sales_percentage|floatformat:2 }}%"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>{{ daily_sales_percentage|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="text-muted">Last 24 Hours</small>
+                    </div>
+            
+                    <!-- Total Inventory -->
+                    <div class="inventory">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        <div class="middle">
+                            <div class="left">
+                                <h3>Total Inventory</h3>
+                                <h1>{{ daily_total_inventory }}</h1>
+                            </div>
+                            <div class="progress">
+                                <svg>
+                                    <circle cx="45" cy="47" r="{{ daily_inventory_percentage|floatformat:2 }}%"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>{{ daily_inventory_percentage|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="text-muted">Last 24 Hours</small>
+                    </div>
+            
+                    <!-- Total Profit -->
+                    <div class="profit">
+                        <span class="material-symbols-outlined">finance_chip</span>
+                        <div class="middle">
+                            <div class="left">
+                                <h3>Total Profit</h3>
+                                <h1>${{ daily_total_profit }}</h1>
+                            </div>
+                            <div class="progress">
+                                <svg>
+                                    <circle cx="45" cy="47" r="{{ daily_profit_percentage|floatformat:2 }}%"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>{{ daily_profit_percentage|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="text-muted">Last 24 Hours</small>
+                    </div>
+                </div>
+            </div>
+            
+
+<!-- Monthly Metrics Container -->
+<div id="monthly-metrics" class="metrics-container" style="display: none;">
+    <div class="insights">
+        <!-- Total Sales -->
+        <div class="sales">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Sales</h3>
+                    <h1>{{ monthly_total_sales }}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="45" cy="47" r="{{ monthly_sales_percentage|floatformat:2 }}%"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>{{ monthly_sales_percentage|floatformat:2 }}%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 30 Days</small>
+        </div>
+
+        <!-- Total Inventory -->
+        <div class="inventory">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Inventory</h3>
+                    <h1>{{ monthly_total_inventory }}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="45" cy="47" r="{{ monthly_inventory_percentage|floatformat:2 }}%"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>{{ monthly_inventory_percentage|floatformat:2 }}%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 30 Days</small>
+        </div>
+
+        <!-- Total Profit -->
+        <div class="profit">
+            <span class="material-symbols-outlined">finance_chip</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Profit</h3>
+                    <h1>${{ monthly_total_profit }}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="45" cy="47" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>{{ monthly_profit_percentage|floatformat:2 }}%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 30 Days</small>
+        </div>
+    </div>
+</div>
+
+<!-- Yearly Metrics Container -->
+<div id="yearly-metrics" class="metrics-container" style="display: none;">
+    <div class="insights">
+        <!-- Total Sales -->
+        <div class="sales">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Sales</h3>
+                    <h1>{{ yearly_total_sales }}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="45" cy="47" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>{{ yearly_sales_percentage|floatformat:2 }}%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 365 Days</small>
+        </div>
+
+        <!-- Total Inventory -->
+        <div class="inventory">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Inventory</h3>
+                    <h1>{{ yearly_total_inventory }}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="45" cy="47" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>{{ yearly_inventory_percentage|floatformat:2 }}%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 365 Days</small>
+        </div>
+
+        <!-- Total Profit -->
+        <div class="profit">
+            <span class="material-symbols-outlined">finance_chip</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Profit</h3>
+                    <h1>${{ yearly_total_profit }}</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="45" cy="47" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>{{ yearly_profit_percentage|floatformat:2 }}%</p>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 365 Days</small>
+        </div>
+    </div>
+</div>
+
+            
+            
+            <div class="recent-inventory">
+                <h2>Recent Inventory</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>SKU</th>
+                            <th>Size</th>
+                            <th>Condition</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in inventory_items|slice:":10" %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.sku }}</td>
+                            {% if item.category == "Streetwear" %}
+                                <td>{{ item.apparel_size }}</td>
+                            {% else %}
+                                <td>{{ item.size }}</td>
+                            {% endif %}
+                            <td>{{ item.condition }}</td>
+                            <td>{{ item.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{% url 'inventory' %}">Show All</a>
+            </div>
+            
+        </main>
+        {% endblock %}
+        {% block right %}
+        <div class="right">
+            <div class="top">
+                <div class="theme">
+                    <button id="menu-btn">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                    <div class="theme-toggler">
+                        <span class="material-symbols-outlined active">light_mode</span>
+                        <span class="material-symbols-outlined">dark_mode</span>
+                    </div>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Welcome, <b>{{ request.user }}</b></p>
+                        <small class="text-muted"></small>
+                    </div>
+                    <div class="profile-picture">
+                        <a href="{% url 'settings' %}" class="settings"><img src="{{ profile_form.profile_pic.value.url }}" alt="Profile Picture"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-updates">
+                <center><h1>Top Sellers</h1></center>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message"></div>
+                    </div>
+                </div>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message"></div>
+                    </div>
+                </div>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message">
+                        </div>
+                    </div>
+                </div>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="" alt="Product Image">
+                        </div>
+                        <div class="message">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endblock %}
+
+    </div>
+    <script src="{% static 'script/dashboard.js' %}"></script>
+
+</body>
+</html>

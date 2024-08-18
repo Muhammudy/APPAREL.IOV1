@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <style>
+        /* Include the CSS above here */
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.details-section h2').forEach(section => {
+                section.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('show');
+                });
+            });
+        });
+    </script>
+    <style>
+        /* Sidebar link styling */
+aside .sidebar a.inventory {
+    background: lightgray !important; /* Basic background color */
+    color: black !important; /* Basic text color */
+    margin-left: 0 !important;
+}
+
+aside .sidebar a.inventory::before {
+    content: '' !important;
+    width: 6px !important;
+    height: 100% !important;
+    background: black !important; /* Basic background color */
+}
+
+aside .sidebar a.inventory span {
+    color: black !important; /* Basic text color */
+    margin-left: calc(1rem - 3px) !important;
+}
+
+/* Sidebar link hover effect */
+aside .sidebar a:hover span {
+    margin-left: 1.5rem !important;
+}
+
+/* Sidebar link for the dashboard section */
+aside .sidebar a.dashboard {
+    background: none !important; /* No background */
+    color: gray !important; /* Basic text color */
+    margin-left: 0 !important;
+}
+
+aside .sidebar a.dashboard::before {
+    content: '' !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: none !important; /* No background */
+}
+
+aside .sidebar a.dashboard span {
+    color: gray !important; /* Basic text color */
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a.dashboard:hover,
+aside .sidebar a.dashboard:hover * {
+    color: black !important; /* Basic text color on hover */
+}
+
+/* Top section layout */
+.top {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header layout */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+.content-wrapper .inventory-title{
+    margin-top: 10rem;
+}
+
+
+
+
+/* Details section */
+.details-section {
+    display: flex;
+    flex-direction: column;
+    background-color: lightgray; /* Basic background color */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Details section header */
+.details-section h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* Details content */
+.details-section .details-content {
+    display: none;
+    flex-direction: column;
+}
+
+/* Details paragraph */
+.details-section p {
+    font-size: 14px;
+    color: gray; /* Basic text color */
+}
+
+/* Show details content */
+.details-section.show .details-content {
+    display: flex;
+}
+
+/* Activity section */
+.activity-section {
+    display: flex;
+    flex-direction: column;
+    background-color: lightgray; /* Basic background color */
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Activity paragraph */
+.activity-section p {
+    font-size: 14px;
+    color: gray; /* Basic text color */
+    margin-bottom: 5px;
+}
+
+/* Activity item */
+.activity-section .activity-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Activity item span */
+.activity-section .activity-item span {
+    font-size: 14px;
+    color: gray; /* Basic text color */
+}
+
+/* Activity item status */
+.activity-section .activity-item span.status {
+    font-size: 12px;
+    color: white; /* Basic text color */
+    background-color: gray; /* Basic background color */
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* Sold status */
+.activity-section .activity-item span.status.sold {
+    background-color: red; /* Basic background color */
+}
+
+/* Listed status */
+.activity-section .activity-item span.status.listed {
+    background-color: blue; /* Basic background color */
+}
+
+/* Created status */
+.activity-section .activity-item span.status.created {
+    background-color: green; /* Basic background color */
+}
+
+    </style>
+</head>
+<body>
+    {% extends "inventory.html" %}
+    {% block main %}
+    <div class="content-wrapper">
+        <div class="header">
+            <h1 class="inventory-title">Edit Inventory Item</h1>
+        </div>
+        <form method="POST" action="{% url 'update-inventory' inventory_item.pk %}">
+            {% csrf_token %}
+            <div class="details-section product-details">
+                <h2>Product details</h2>
+                <div class="details-content">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="{{ inventory_item.name }}"><br>
+
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" value="{{ inventory_item.description }}"><br>
+
+                    <label for="sku">SKU:</label>
+                    <input type="text" id="sku" name="sku" value="{{ inventory_item.sku }}"><br>
+                </div>
+            </div>
+            <div class="details-section pricing-details">
+                <h2>Pricing details</h2>
+                <div class="details-content">
+                    <label for="price_paid">Price Paid:</label>
+                    <input type="number" id="price_paid" name="price_paid" value="{{ inventory_item.price_paid }}"><br>
+
+                    <label for="price_sold">Price Sold:</label>
+                    <input type="number" id="price_sold" name="price_sold" value="{{ inventory_item.price_sold }}"><br>
+                </div>
+            </div>
+            <div class="details-section size-condition">
+                <h2>Size & Condition</h2>
+                <div class="details-content">
+                    {% if inventory_item.size == "N/A" %}
+                    <div id="apparel-size-container">
+                        <label for="apparel_size">Apparel Size:</label>
+                        <select id="apparel_size" name="apparel_size">
+                            <option value="Small" {% if inventory_item.apparel_size == 'Small' %}selected{% endif %}>Small</option>
+                            <option value="Medium" {% if inventory_item.apparel_size == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Large" {% if inventory_item.apparel_size == 'Large' %}selected{% endif %}>Large</option>
+                            <option value="X-Large" {% if inventory_item.apparel_size == 'X-Large' %}selected{% endif %}>X-Large</option>
+                        </select><br>
+                    </div>
+                    {% else %}
+                    <div id="size-container">
+                        <label for="size">Size:</label>
+                        <input type="number" id="size" name="size" value="{{ inventory_item.size }}"><br>
+                    </div>
+                    {% endif %}
+                    <label for="condition">Condition:</label>
+                    <select id="condition" name="condition">
+                        <option value="New" {% if inventory_item.condition == 'New' %}selected{% endif %}>New</option>
+                        <option value="Used" {% if inventory_item.condition == 'Used' %}selected{% endif %}>Used</option>
+                        <option value="Lightly Used" {% if inventory_item.condition == 'Lightly Used' %}selected{% endif %}>Lightly Used</option>
+                    </select><br>
+                </div>
+            </div>
+            <div class="details-section quantity-status">
+                <h2>Quantity & Status</h2>
+                <div class="details-content">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="{{ inventory_item.quantity }}"><br>
+
+                    <label for="status">Status:</label>
+                    <select id="status-info" name="status">
+                        <option value="Available">Available</option>
+                        <option value="Sold" {% if inventory_item.status == 'Sold' %}selected{% endif %}>Sold</option>
+                    </select><br>
+                </div>
+            </div>
+            <button type="submit" name="update">
+                <span class="material-symbols-outlined">update</span>
+            </button>
+            <button type="submit" name="delete">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </form>
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="profile picture" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

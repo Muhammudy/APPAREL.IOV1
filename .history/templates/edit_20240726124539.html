@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Inventory Item</title>
+</head>
+<body>
+    <h1>Edit Inventory Item</h1>
+
+    <form method="POST" action="{% url 'inventory' inventory_item.id %}">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ inventory_item.name }}"><br>
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" value="{{ inventory_item.description }}"><br>
+
+        <label for="sku">SKU:</label>
+        <input type="text" id="sku" name="sku" value="{{ inventory_item.sku }}"><br>
+
+        <label for="price_paid">Price Paid:</label>
+        <input type="number" id="price_paid" name="price_paid" value="{{ inventory_item.price_paid }}"><br>
+
+        <label for="price_sold">Price Sold:</label>
+        <input type="number" id="price_sold" name="price_sold" value="{{ inventory_item.price_sold }}"><br>
+
+        <label for="size">Size:</label>
+        <input type="number" id="size" name="size" value="{{ inventory_item.size }}"><br>
+
+        <label for="condition">Condition:</label>
+        <select id="condition" name="condition">
+            <option value="New" {% if inventory_item.condition == 'New' %}selected{% endif %}>New</option>
+            <option value="Used" {% if inventory_item.condition == 'Used' %}selected{% endif %}>Used</option>
+            <option value="Lightly Used" {% if inventory_item.condition == 'Lightly Used' %}selected{% endif %}>Lightly Used</option>
+        </select><br>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" value="{{ inventory_item.quantity }}"><br>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="Sneakers" {% if inventory_item.category == 'Sneakers' %}selected{% endif %}>Sneakers</option>
+            <option value="Streetwear" {% if inventory_item.category == 'Streetwear' %}selected{% endif %}>Streetwear</option>
+        </select><br>
+
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

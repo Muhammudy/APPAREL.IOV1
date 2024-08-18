@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upcoming Releases</title>
+</head>
+<body>
+    <h1>Test Upcoming Releases</h1>
+    <form id="upcoming-releases-form">
+        <label for="daysAhead">Days Ahead:</label>
+        <input type="number" id="daysAhead" name="daysAhead" min="1" value="30">
+        <button type="submit">Fetch Upcoming Releases</button>
+    </form>
+    <div id="results"></div>
+    <script>
+        document.getElementById('upcoming-releases-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const daysAhead = document.getElementById('daysAhead').value;
+            
+            fetch('http://localhost:4000/get-upcoming-releases', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ daysAhead: parseInt(daysAhead) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '<h2>Upcoming Releases</h2>';
+                if (data.length === 0) {
+                    resultsDiv.innerHTML += '<p>No upcoming releases found.</p>';
+                } else {
+                    const list = document.createElement('ul');
+                    data.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<strong>${item.shoeName}</strong> by ${item.brand} - Release Date: ${item.releaseDate}`;
+                        list.appendChild(listItem);
+                    });
+                    resultsDiv.appendChild(list);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

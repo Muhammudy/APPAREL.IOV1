@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+        :root {
+    --color-primary: #7380ec;
+    --color--primary--shade: #c5caf3; 
+    --color-logos: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+
+/*----------------------------------darkthemes--------------*/
+
+.dark-theme-variables {
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+        /* Sidebar link for the inventory section */
+        aside .sidebar a.settings {
+            background: var(--color-light) !important; /* Light background color */
+            color: var(--color-primary) !important; /* Primary color text */
+            margin-left: 0 !important; /* No left margin */
+        }
+
+        /* Before pseudo-element for the inventory link */
+        aside .sidebar a.settings::before {
+            content: '' !important; /* Empty content */
+            width: 6px !important; /* 6px width */
+            height: 100% !important; /* Full height */
+            background: var(--color-primary) !important; /* Primary color background */
+        }
+
+        /* Inventory link text */
+        aside .sidebar a.settings span {
+            color: var(--color-primary) !important; /* Primary color text */
+            margin-left: calc(1rem - 3px) !important; /* Adjusted left margin */
+        }
+
+        /* Sidebar link hover effect */
+        aside .sidebar a:hover span {
+            margin-left: 1.5rem !important; /* Increased left margin on hover */
+        }
+
+        /* Sidebar link for the dashboard section */
+        aside .sidebar a.dashboard {
+            background: none !important; /* No background */
+            color: var(--color-info-dark) !important; /* Dark info color text */
+            margin-left: 0 !important; /* No left margin */
+        }
+
+        /* Before pseudo-element for the dashboard link */
+        aside .sidebar a.dashboard::before {
+            content: '' !important; /* Empty content */
+            width: 0 !important; /* No width */
+            height: 0 !important; /* No height */
+            background: none !important; /* No background */
+        }
+
+        /* Dashboard link text */
+        aside .sidebar a.dashboard span {
+            color: var(--color-info-dark) !important; /* Dark info color text */
+            margin-left: calc(1rem - 3px); /* Adjusted left margin */
+        }
+
+        /* Dashboard link hover effect */
+        aside .sidebar a.dashboard:hover,
+        aside .sidebar a.dashboard:hover * {
+            color: var(--color-primary) !important; /* Primary color text on hover */
+        }
+
+        /* Top section layout */
+        .top {
+            display: flex; /* Aligns the children in a flexible container */
+            flex-direction: column;
+            background: rgb(255, 255, 255);
+            margin-top: 2rem;
+        }
+
+
+        .container-main{
+            background-color: transparent;
+            
+        }
+
+        .tops{
+            box-shadow: var(--box-shadow);
+            background-color: #ffffff;
+            border-radius: var(--card-border-radius);
+            transition: all 300ms ease;
+        }
+
+        .tops:hover{
+            box-shadow: none;
+
+        }
+
+
+
+
+        /* Header layout */
+        .header {
+            margin-top: 4rem;
+            display: flex; /* Aligns items in a flexible container */
+            align-items: center; /* Centers the items vertically */
+            justify-content: space-between; /* Distributes space between items */
+            
+        }
+
+
+        .header .settings-title{
+            font-size: 3rem;
+            margin-left: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+
+        /* Inventory title */
+        .settings-title {
+            margin: 0; /* Removes default margin */
+            padding-right: 50rem;
+        }
+
+        /* Inventory link layout */
+        .settings {
+            display: flex; /* Aligns the children in a flexible container */
+            align-items: center; /* Centers the items vertically */
+            text-decoration: none; /* Removes underline from text */
+            color: inherit; /* Inherits the color from its parent */
+        }
+
+        /* Horizontal rule style */
+
+        /* Top inventory modal layout */
+        .top-inventory {
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+            position: fixed; /* Stay in place */
+            top: 0; /* Aligns at the top of the screen */
+            left: 0; /* Aligns at the left of the screen */
+            display: none; /* Hidden by default */
+            justify-content: center; /* Centers children horizontally */
+            align-items: center; /* Centers children vertically */
+        }
+
+
+        .data-sneakers table {
+            width: 100%;
+            border-collapse: collapse;
+            
+        }
+
+        .data-sneakers th, .data-sneakers td {
+            padding: 1rem;
+            text-align: center;
+            
+    
+
+        }
+
+
+
+        .data-sneakers tbody{
+            font-size: 1.2rem;
+            color: var(black);
+        }
+
+
+
+
+        .data-sneakers th {
+
+
+
+            padding-bottom: 2rem;
+            font-size: 1rem;
+            border-radius: var(--card-border-radius);
+            text-align: center;
+            white-space: nowrap; /* Prevents text from wrapping to the next line */
+        }
+
+
+
+
+
+    </style>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+    {% extends "dashboard.html" %}
+    {% block main %}
+    <div class>
+        <div class="header">
+            <h1 class="settings-title">Settings</h1>
+            <a href="#" id="button" class="inventory">
+            </a>
+        </div>
+
+        <div class="container-main">
+            <div class="tops">
+                <hr>
+                <div class = "max-class">
+                    <div class="data-sneakers">
+                        <table>
+                            <thead>
+                                    <tr>
+                                        <th style="color: transparent;">Logo</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>SKU</th>
+                                        <th>Condition</th>
+                                        <th>Size</th>
+                                        <th>Purchase Price</th>
+                                        <th>Sale Price</th>
+                                        <th>Status</th>
+                                        <th>Quantity</th>
+                                        <th style= "color: transparent;">Actions</th>
+    
+                                    </tr>
+                            </thead>
+
+                            
+                            
+                            <tbody>
+                                {% for item in inventory_items %}
+                                    <tr>
+                                        {% if item.imageUrl and item.imageUrl != "https://example.com/default_image.jpg" %}
+                                            <td><img src="{{ item.imageUrl }}" style="width: 50px; height: auto;"></td> <!--user-->
+                                        {% elif item.image %}
+                                            <td><img src="{{ item.image.url }}" style="width: 50px; height: auto;"></td> <!--stockxr-->
+                                        {% endif %}
+
+
+
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.description }}</td>
+                                        <td>{{ item.sku }}</td>
+                                        <td>{{ item.condition }}</td>
+                                        {% if item.size == "N/A" %}
+                                            <td>{{ item.apparel_size }}</td>
+                                        {% else %}
+                                            <td>{{ item.size }}</td>
+                                        {% endif %}
+                                        <td>{{ item.price_paid }}</td>
+                                        <td>{{ item.price_sold }}</td>
+                                        <td>{{ item.status }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>
+                                            <a href="{% url 'update-inventory' item.id %}">
+                                                <span class ="material-symbols-outlined">edit</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+    {% endblock %}
+
+    {% block right %}
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="profile">
+                <div class="info">
+                    <p>Welcome, <b>{{ request.user }}</b></p>
+                    <small class="text-muted"></small>
+                </div>
+                <div class="profile-picture">
+                    <img src="profile picture" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <center><h2>Recent Updates</h2></center>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo"></div>
+                    <img src="profile picture" alt="Profile Picture">
+                    <div class="message">
+                        <p><b>Message</b>Put Messages here</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

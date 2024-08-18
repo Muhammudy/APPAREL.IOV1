@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+    <style>
+        :root {
+            --color-primary: #7380ec;
+            --color-primary-shade: #c5caf3;
+            --color-logos: #ff7782;
+            --color-success: #41f1b6;
+            --color-warning: #ffbb55;
+            --color-white: #fff;
+            --color-info-dark: #7d8da1;
+            --color-info-light: #dce1eb;
+            --color-dark: #363949;
+            --color-light: rgba(132, 139, 200, 0.18);
+            --color-primary-variant: #111e88;
+            --color-dark-variant: #677483;
+            --color-background: linear-gradient(135deg, #4a90e2, #f06);
+
+            --card-border-radius: 2rem;
+            --border-radius-1: 0.4rem;
+            --border-radius-2: 0.8rem;
+            --border-radius-3: 1.2rem;
+
+            --card-padding: 1.8rem;
+            --padding-1: 1.2rem;
+
+            --box-shadow: 0 2rem 3rem var(--color-light);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.2rem;
+            background: var(--color-background);
+            color: var(--color-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem;
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .form-container:hover {
+            box-shadow: none;
+        }
+
+        .form-row {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-row label {
+            text-align: center;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            transition: color 0.3s ease;
+        }
+
+        .form-row input[type="text"],
+        .form-row input[type="password"],
+        .form-row input[type="email"] {
+            font-family: 'DM Sans', sans-serif;
+            width: 95%;
+            padding: 1rem;
+            border-radius: var(--border-radius-1);
+            border: 2px solid var(--color-info-dark);
+            font-size: 1.2rem;
+            color: var(--color-dark);
+            background: var(--color-white);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .form-row input[type="text"]:focus,
+        .form-row input[type="password"]:focus,
+        .form-row input[type="email"]:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(115, 128, 236, 0.5);
+        }
+
+        .form-row input[type="text"]:focus + label,
+        .form-row input[type="password"]:focus + label,
+        .form-row input[type="email"]:focus + label {
+            color: var(--color-primary);
+        }
+
+        .submit-button {
+            font-family: 'DM Sans', sans-serif;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--border-radius-1);
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: var(--color-primary-shade);
+        }
+
+        .messages {
+            max-width: 400px;
+            margin: 1rem auto;
+            padding: 0;
+            list-style: none;
+        }
+
+        .messages li {
+            margin-bottom: 0.5rem;
+            padding: 0.8rem;
+            border-radius: var(--border-radius-1);
+            background: var(--color-light);
+            color: var(--color-dark);
+        }
+
+        .messages li.error {
+            background: var(--color-logos);
+            color: var(--color-white);
+        }
+
+        .messages li.success {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            color: var(--color-primary-shade);
+        }
+
+        p {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: var(--color-dark-variant);
+        }
+
+        .material-icons {
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-row">
+                {{ form.as_p }}
+            </div>
+            <div class="form-row">
+                <input type="submit" value="Register" class="submit-button">
+            </div>
+        </form>
+        <p>Already signed up? <a href="{% url 'login' %}">Login</a></p>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

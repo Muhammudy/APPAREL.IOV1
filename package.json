@@ -4,15 +4,15 @@
   "description": "APPAREL.IO is a robust web application designed to streamline the management of sneaker collections. Whether you're a sneaker enthusiast or a reseller, this app helps you keep track of your inventory, set collection goals, and visualize key data metrics. By leveraging the Sneaks API, APPAREL.IO fetches real-time sneaker data, providing users with up-to-date information on prices, release dates, and availability.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"node app.js\" \"gunicorn sneaker.wsgi:application\""
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["sneaker", "apparel", "inventory", "management", "API"],
+  "author": "Yousuf M",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "concurrently": "^8.2.2",
     "express": "^4.19.2",
-    "sneaks-api": "^1.2.3"
+    "sneaks-api": "^1.2.3",
+    "concurrently": "^7.0.0"
   }
 }

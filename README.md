@@ -72,9 +72,7 @@ APPAREL.IO is a robust web application designed to streamline the management of 
    python manage.py runserver
    ```
 
-## Deployment
 
-To deploy APPAREL.IO, you can use platforms like Render or Heroku. Ensure that you set the necessary environment variables (such as `DJANGO_SECRET_KEY`) and collect static files before deployment. The application is designed to be easily scalable and deployable in production environments.
 
 ## Usage
 
